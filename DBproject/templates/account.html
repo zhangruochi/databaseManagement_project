@@ -30,16 +30,16 @@
           <li class="nav-item ">
             <a class="nav-link" href="movie_list.html">Moives</a>
           </li>
-          <li class="nav-item active">
+          <li class="nav-item">
             <a class="nav-link" href="on_show.html">On show</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="director.html">Director</a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item ">
             <a class="nav-link" href="actor.html">Actor</a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item active">
             <a class="nav-link" href="account.html">Account</a>
           </li>
           <li class="nav-item">
@@ -114,51 +114,100 @@
 
       <div class="row featurette">
         <div class="col-md-7">
-          <div class="radio mb-3">
-            On show movie list:<br /><br /> 
-            <label><input name="Order" type="radio" value="" checked/>Order by time </label> 
-            <label><input name="Order" type="radio" value="" />Order by evaluation </label>
-          </div>
+          <h2 class="featurette-heading">User information</h2>
+          <span class="text-muted">Account center</span>
           <hr class="featurette-divider">
           <!-- <h2 class="featurette-heading">First featurette heading. <span class="text-muted">It'll blow your mind.</span></h2> -->
           <!-- <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p> -->
           <table>
-          <tr>
-            <td>
-              <div class="col-md-3 mb-3">
-                <a href="movie_detail.html" target="_blank" data-act="movie-click" data-val="{movieid:1203437}">
-                  <div>
-                    <img width="150" height="200" src="http://p1.meituan.net/movie/cac9e6514044986747204c41c0a89f4e725343.jpg">
-                  </div>
-                </a>
-                <div>
-                  <span class="text-muted">purchase</span>
-                </div>
-                <div class="channel-detail movie-item-title" title="Ying">
-                  <a href="/films/1203437" target="_blank" data-act="movies-click" data-val="{movieId:1203437}">Ying</a>
-                </div>
-                <div class="channel-detail channel-detail-orange"><i class="integer">8.</i><i class="fraction">1</i></div>
+            <tr>
+              <td>
+                Name:
+              </td>
+              <td>
+                Zhehao Guo
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Gender:
+              </td>
+              <td>
+                male
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Birth:
+              </td>
+              <td>
+                1995-07-06
+              </td>
+            </tr>
+            <tr>
+              <td>
+                Account:
+              </td>
+              <td>
+                zhg26@pitt.edu
+              </td>
+            </tr>
+            <tr>
+              <td>
+                District:
+              </td>
+              <td>
+                5
+              </td>
+            </tr>          
+          </table>
+          <hr class="featurette-divider">
+          <div>
+            <div><span class="text-muted">Update information</span></div>
+            <hr class="featurette-divider">
+            <div class="col-md-6 mb-3">
+              <label for="Name"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Name</font></font></label>
+              <input type="text" class="form-control" id="name" placeholder="" value="" required="">
+              <div class="invalid-feedback">
+                Valid name is required.
               </div>
-            </td>
-            
-            <td>
-              <div class="col-md-3 mb-3">
-                <a href="movie_detail.html" target="_blank" data-act="movie-click" data-val="{movieid:42964}">
-                  <div>
-                    <img width="150" height="200" src="http://p0.meituan.net/movie/363e3a7e614d29b2847ff4e62afcd3f42168651.jpg">
-                  </div>
-                </a>
-                <div>
-                  <span class="text-muted">purchase</span>
-                </div>
-                <div class="channel-detail movie-item-title" title="Ying">
-                  <a href="/films/1203437" target="_blank" data-act="movies-click" data-val="{movieId:42964}">Venom</a>
-                </div>
-                <div class="channel-detail channel-detail-orange"><i class="integer">8.</i><i class="fraction">1</i></div>
+            </div>
+            <div class="col-md-6 mb-3">
+              <label for="Password"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Password</font></font></label>
+              <input type="text" class="form-control" id="password" placeholder="" value="" required="">
+              <div class="invalid-feedback">
+                Valid gender is required.
               </div>
-            </td>
-          </tr>
-        </table>
+            </div>
+            <div class="col-md-6 mb-3">
+              Gender:<br /><br /> 
+              <label><input name="select" type="radio" value="" checked />male </label> 
+              <label><input name="select" type="radio" value="" />female </label> 
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="country"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">District:</font></font></label>
+                <select class="custom-select d-block w-100" id="country" required="">
+                  <option value=""><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Choose...</font></font></option>
+                  <option><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">0</font></font></option>
+                  <option><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">1</font></font></option>
+                  <option><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">2</font></font></option>
+                  <option><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">3</font></font></option>
+                  <option><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">4</font></font></option>
+                  <option><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">5</font></font></option>
+                  <option><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">6</font></font></option>
+                  <option><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">7</font></font></option>
+                  <option><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">8</font></font></option>
+                  <option><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">9</font></font></option>
+                  <option><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">10</font></font></option>
+                </select>
+                <div class="invalid-feedback">
+                  Please select a valid district number.
+                </div>
+              </div>
+              <div class="col-md-6 mb-3">
+                <button class="btn btn-primary" type="submit"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Confirm</font></font></button>
+              </div>
+          </div>
         </div>
         <div class="col-md-5">
           <img class="featurette-image img-fluid mx-auto" data-src="holder.js/500x500/auto" alt="500x500" style="width: 500px; height: 500px;" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22500%22%20height%3D%22500%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20500%20500%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_16742a9ea0e%20text%20%7B%20fill%3A%23AAAAAA%3Bfont-weight%3Abold%3Bfont-family%3AArial%2C%20Helvetica%2C%20Open%20Sans%2C%20sans-serif%2C%20monospace%3Bfont-size%3A25pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_16742a9ea0e%22%3E%3Crect%20width%3D%22500%22%20height%3D%22500%22%20fill%3D%22%23EEEEEE%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%22185.125%22%20y%3D%22261.1%22%3E500x500%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E" data-holder-rendered="true">
