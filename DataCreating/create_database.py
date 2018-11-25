@@ -114,10 +114,17 @@ def generate_user():
                             random.choice(a1) + random.choice(a2) + random.choice(a3), random.choice(genders), "123456",  birth.format(random.randint(20,99),random.randint(1, 12),random.randint(1,29))))
                 index += 1
 
+
+    visited = set()
     with open("update_user.sql", "w") as f:
         while index > 0:
-            f.write("UPDATE user SET account = \"{}\", district = {} WHERE id = {};\n".format("".join(choices(account,k = 5)) + "@pitt.edu", random.randint(0,10),index))
-            index -= 1
+            email = "".join(choices(account,k = 5)) + "@pitt.edu"
+            if email in visited:
+                continue
+            else:
+                f.write("UPDATE user SET account = \"{}\", district = {} WHERE id = {};\n".format(email, random.randint(0,10),index))
+                visited.add(email)
+                index -= 1
 
 
 
