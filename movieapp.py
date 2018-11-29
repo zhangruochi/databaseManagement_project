@@ -11,12 +11,14 @@ urls = (
     '/','Index',
     '/index', 'Index',
     '/login','Login',
+    '/register','Register',
     '/logout','Logout',
     '/onshow','Onshow',
     '/user',"User",
     '/movies(.*)',"Movies",
     '/moviedetail(.*)',"MovieDetail",
     '/actor(.*)',"Actor"
+
 )
 
 
@@ -41,9 +43,9 @@ class Login:
         return render.login(error)
 
     def POST(self):
-        i = web.input()
-        email = i.get('email')
-        passwd = i.get('passwd')
+        raw_data = web.input()
+        email = raw_data.get('email')
+        passwd = raw_data.get('passwd')
         check = db.query('select * from user where account = $email and password = $passwd', vars = {'email':email, 'passwd': passwd})
         if check:
             error = False
@@ -53,6 +55,36 @@ class Login:
         else:
             error = True
             return render.login(error)
+
+class Register:
+    
+    def GET(self):
+       return render.register(False)
+
+
+    def POST(self):
+        raw_data = web.input()
+        account = raw_data.get('account')
+        password = raw_data.get('password')
+        name = raw_data.get('name')
+        gender = raw_data.get('gender')
+        birth = raw_data.get('birth')
+        district = raw_data.get('district')
+
+        check = db.query('SELECT * FROM user WHERE account = $account and password = $password;', vars = {'account':account, 'password': password})
+        
+        if check:
+            return render.register(True)
+        else:
+            res = db.insert("user",name = name,gender = gender,password = password, birth = birth, account = account, district = district)
+            if res:
+                return render.index()
+            else:
+                return "error"
+
+
+
+
 
 class Onshow:
     def GET(self):
@@ -65,8 +97,8 @@ class Onshow:
             return "can not find any on show movie"
     
     def POST(self):
-        i = web.input()
-        key = i.get("key")
+        raw_data = web.input()
+        key = raw_data.get("key")
         res = db.query('select * from movies where title = $key',vars = {"key":key})
         if res:
             return render.actor(res)
@@ -96,9 +128,10 @@ class Movies:
             return "Can not find any movie."
 
     def POST(self,x):
-        i = web.input()
-        title = i.get("key")
-        
+
+        raw_data = web.input()
+        title = raw_data.get("key")
+
         actors = db.query('SELECT DISTINCT(a.name) FROM movies m JOIN rel_movie_actor r ON m.movie_id = r.movie_id JOIN actor a ON r.actor_id = a.id WHERE title = $title;',vars = {"title": title})
         directors = db.query('SELECT DISTINCT(d.name) FROM director d JOIN movies ON movies.director_id = d.id WHERE title = $title;',vars = {"title": title})
         ratings = db.query('SELECT r.score,r.text FROM rating r JOIN movies m ON  m.movie_id = r.movie_id WHERE m.title = $title',vars = {"title": title})

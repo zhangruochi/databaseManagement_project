@@ -37,7 +37,8 @@
         <h1 class="cover-heading">‎Inception.</h1>
         <p class="lead" style="font-weight:bold" >The smallest seed of an idea can grow. It can grow to define or destroy you.</p>
         <p class="lead">
-          <a href="/login" class="btn btn-lg btn-secondary">Learn more</a>
+          $if not context.logged_in:      
+            <a href="/register" class="btn btn-lg btn-secondary">Register Now !</a>
         </p>
       </main>
 
