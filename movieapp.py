@@ -17,6 +17,7 @@ urls = (
     '/user',"User",
     '/movies(.*)',"Movies",
     '/moviedetail(.*)',"MovieDetail",
+    '/movietag(.*)',"MovieTag",
     '/actor(.*)',"Actor"
 
 )
@@ -142,6 +143,34 @@ class Movies:
             return "no movies"
 
 
+
+class MovieTag:
+    def GET(self,tag):
+        genre = {"Adventure","Comedy","Action","Drama","Crime","Thriller", "Animation", "Biography"}
+        if tag in genre:
+            got_movies = db.select('movies',order='movie_id', where="genre = $tag",vars = {"tag":tag})
+
+
+        if got_movies:
+            return render.movietag(got_movies)
+        else:
+            return "Can not find any movie."
+
+    def POST(self,x):
+
+        raw_data = web.input()
+        title = raw_data.get("key")
+
+        actors = db.query('SELECT DISTINCT(a.name) FROM movies m JOIN rel_movie_actor r ON m.movie_id = r.movie_id JOIN actor a ON r.actor_id = a.id WHERE title = $title;',vars = {"title": title})
+        directors = db.query('SELECT DISTINCT(d.name) FROM director d JOIN movies ON movies.director_id = d.id WHERE title = $title;',vars = {"title": title})
+        ratings = db.query('SELECT r.score,r.text FROM rating r JOIN movies m ON  m.movie_id = r.movie_id WHERE m.title = $title',vars = {"title": title})
+        movies = db.query('SELECT * FROM movies WHERE title = $title',vars = {"title":title})
+        if actors or directors or ratings or movies:
+            return render.moviedetail(movies,actors,directors,ratings)
+        else:
+            return "no movies"
+
+
 class Actor:
     def GET(self,name):
         res = db.query('SELECT * from actor WHERE name = $name',vars = {"name":name})
@@ -189,6 +218,9 @@ class MovieDetail:
             return render.moviedetail(movies,actors,directors,ratings)
         else:
             return "error"
+
+
+
 
 
 

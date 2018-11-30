@@ -1,4 +1,4 @@
-$def with (movies,page)
+$def with (movies)
 <!doctype html>
 <html lang="en">
   <head>
@@ -58,83 +58,78 @@ $def with (movies,page)
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
               </form>
             </div>
-            
-
+      
           
           <hr class="featurette-divider">
 
           <div>
             <table>
-              <td>Genre:</td>
-
-              <td>
-                <a role="button"  class="btn btn-outline-danger">ALL</a>
-              </td>
-              <td>
-                <a role="button" href="/movietagAdventure"  class="btn btn-outline-secondary">Adventure</a>
-                <a role="button" href="/movietagComedy"  class="btn btn-outline-success">Comedy</a>
-                <a role="button" href="/movietagAction"  class="btn btn-outline-primary">Action</a>
-                <a role="button" href="/movietagDrama"  class="btn btn-outline-warning">Drama</a>
-                <a role="button" href="/movietagCrime"  class="btn btn-outline-info">Crime</a>
-                <a role="button" href="/movietagThriller"  class="btn btn-outline-light">Thriller</a>
-                <a role="button" href="/movietagAnimation"  class="btn btn-outline-info">Animation</a>
-                <a role="button" href="/movietagBiography"  class="btn btn-outline-secondary">Biography</a>
-              </td>
+              <tr>
+                <td>Genre: </td>
+                <td>
+                  <a role="button" href="/index" class="btn btn-outline-danger">ALL</a>
+                </td>
+                <td>
+                  <a role="button" href="/movietagAdventure"  class="btn btn-outline-secondary">Adventure</a>
+                  <a role="button" href="/movietagComedy"  class="btn btn-outline-success">Comedy</a>
+                  <a role="button" href="/movietagAction"  class="btn btn-outline-primary">Action</a>
+                  <a role="button" href="/movietagDrama"  class="btn btn-outline-warning">Drama</a>
+                  <a role="button" href="/movietagCrime"  class="btn btn-outline-info">Crime</a>
+                  <a role="button" href="/movietagThriller"  class="btn btn-outline-light">Thriller</a>
+                  <a role="button" href="/movietagAnimation"  class="btn btn-outline-info">Animation</a>
+                  <a role="button" href="/movietagBiography"  class="btn btn-outline-secondary">Biography</a>
+                </td>
+              </tr>
               <tr>
                 <td>
                 </td>
                 <td>
                 </td>
                 <td>
-                  <a role="button" href="/"  class="btn btn-outline-success">Sci-Fi</a>
-                  <a role="button" href="/"  class="btn btn-outline-primary">Musical</a>
-                  <a role="button" href="/"  class="btn btn-outline-warning">Family</a>
-                  <a role="button" href="/"  class="btn btn-outline-info">Fantasy</a>
-                  <a role="button" href="/"  class="btn btn-outline-light">Mystery</a>
-                  <a role="button" href="/"  class="btn btn-outline-info">War</a>
-                  <a role="button" href="/"  class="btn btn-outline-success">Romance</a>
-                  <a role="button" href="/"  class="btn btn-outline-primary">Western</a>
+                  <a role="button" href="/index"  class="btn btn-outline-success">Sci-Fi</a>
+                  <a role="button" href="/index"  class="btn btn-outline-primary">Musical</a>
+                  <a role="button" href="/index"  class="btn btn-outline-warning">Family</a>
+                  <a role="button" href="/index"  class="btn btn-outline-info">Fantasy</a>
+                  <a role="button" href="/index"  class="btn btn-outline-light">Mystery</a>
+                  <a role="button" href="/index"  class="btn btn-outline-info">War</a>
+                  <a role="button" href="/index"  class="btn btn-outline-success">Romance</a>
+                  <a role="button" href="/index"  class="btn btn-outline-primary">Western</a>
                 </td>
               </tr>
               <tr>
                 <td>Year:</td>
                 <td>
-                  <a role="button" href="/"  class="btn btn-outline-danger">ALL</a>
+                  <a role="button" href="/index"  class="btn btn-outline-danger">ALL</a>
                 </td>
                 <td>
-                  <a role="button" href="/"  class="btn btn-outline-secondary">After 2018</a>
-                  <a role="button" href="/"  class="btn btn-outline-success">2010-2018</a>
-                  <a role="button" href="/"  class="btn btn-outline-primary">2000-2010</a>
-                  <a role="button" href="/"  class="btn btn-outline-warning">1980-2000</a>
-                  <a role="button" href="/"  class="btn btn-outline-info">1960-1980</a>
-                  <a role="button" href="/"  class="btn btn-outline-light">Before 1960</a>
+                  <a role="button" href="/index"  class="btn btn-outline-secondary">After 2018</a>
+                  <a role="button" href="/index"  class="btn btn-outline-success">2010-2018</a>
+                  <a role="button" href="/index"  class="btn btn-outline-primary">2000-2010</a>
+                  <a role="button" href="/index"  class="btn btn-outline-warning">1980-2000</a>
+                  <a role="button" href="/index"  class="btn btn-outline-info">1960-1980</a>
+                  <a role="button" href="/index"  class="btn btn-outline-light">Before 1960</a>
                 </td>
               </tr>
 
               <tr>
-                
                 <td>Rating:</td>
-                
                 <td>
-                  <a role="button" href="/" class="btn btn-outline-danger">ALL</a>
+                  <a role="button" href="/index" class="btn btn-outline-danger">ALL</a>
                 </td>
-                
                 <td>
-                  <a role="button" href="/" class="btn btn-outline-secondary">R</a>
-                  <a role="button" href="/" class="btn btn-outline-success">PG-13</a>
-                  <a role="button" href="/" class="btn btn-outline-primary">PG</a>
-                  <a role="button" href="/" class="btn btn-outline-warning">G</a>
-                  <a role="button" href="/" class="btn btn-outline-info">NC-17</a>
-                  <a role="button" href="/" class="btn btn-outline-light">TV-PG</a>
-                  <a role="button" href="/" class="btn btn-outline-warning">TV-MA</a>
-                  <a role="button" href="/" class="btn btn-outline-info">B</a>
-                  <a role="button" href="/" class="btn btn-outline-light">B15</a>
-                  <a role="button" href="/" class="btn btn-outline-light">TV-14</a>
+                  <a role="button" href="/index" class="btn btn-outline-secondary">R</a>
+                  <a role="button" href="/index" class="btn btn-outline-success">PG-13</a>
+                  <a role="button" href="/index" class="btn btn-outline-primary">PG</a>
+                  <a role="button" href="/index" class="btn btn-outline-warning">G</a>
+                  <a role="button" href="/index" class="btn btn-outline-info">NC-17</a>
+                  <a role="button" href="/index" class="btn btn-outline-light">TV-PG</a>
+                  <a role="button" href="/index" class="btn btn-outline-warning">TV-MA</a>
+                  <a role="button" href="/index" class="btn btn-outline-info">B</a>
+                  <a role="button" href="/index" class="btn btn-outline-light">B15</a>
+                  <a role="button" href="/index" class="btn btn-outline-light">TV-14</a>
                 </td>
-              
               </tr>
             </table>
-
           </div>
 
 
@@ -171,15 +166,7 @@ $def with (movies,page)
                 </tr>
               </tbody>
             </table>
-            <nav aria-label="Page navigation" style="align:center">
-              <ul class="pagination">
-                  <li class="active"><a href="/movies1">&laquo;</a></li>
-                  $for i in range(10):
-                    <li><a href="/movies$page">$page</a></li>
-                    $ page = (page+1)
-                  <li><a href="/movies$page">&raquo;</a></li>
-              </ul>
-            </nav>
+
           </main>
 </body>
 

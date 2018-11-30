@@ -8,13 +8,14 @@ $def with (error)
     <meta name="author" content="">
     <link rel="icon" href="./static/images/icon.png">
 
-    <title>Signin Template for Bootstrap</title>
+    <title>Movie Information System</title>
 
     <!-- Bootstrap core CSS -->
     <link href="./static/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="./static/css/signin.css" rel="stylesheet">
+    <link href="./static/css/cover.css" rel="stylesheet">
+
     <style>
       .alert {
           padding: 20px;
@@ -39,8 +40,21 @@ $def with (error)
   </style>
 
   </head>
-  <body background="./static/images/login.jpg" style="background-size:cover">   
-    <form class="form-signin" method=POST>
+
+  <body class="text-center" background="./static/images/login.jpg" style="background-size:cover">
+
+    <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
+      <header class="masthead mb-auto">
+        <div class="inner"> 
+          <h3 class="masthead-brand">Movie Bar</h3>
+          <nav class="nav nav-masthead justify-content-center">
+            <a class="nav-link active" href="/index">Home</a>
+                <a class="nav-link" href="/login">Login</a>
+          </nav>
+        </div>
+      </header>
+
+      <form class="form-signin" method=POST>
        $if error:
           <div class="alert">
             <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
@@ -59,5 +73,20 @@ $def with (error)
       <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
     </form>
 
+      <footer class="mastfoot mt-auto">
+        <div class="inner">
+          <p style="color:white">Final project for Infsci2710 by Ruochi Zhang, Zhehao Guo, Jun Jiang </p>
+        </div>
+      </footer>
+    </div>
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script>window.jQuery || document.write('<script src="./static/assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+    <script src="./static/assets/js/vendor/popper.min.js"></script>
+    <script src="./static/js/bootstrap.min.js"></script>
   </body>
 </html>
