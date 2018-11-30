@@ -1,1 +1,1 @@
-SELECT m.title,o.time_schedule,o.seat_limit,o.price,t.name,t.district FROM movies m JOIN on_show o ON m.movie_id = o.movie_id JOIN theater t ON t.id = o.thea_id WHERE m.title = "Bleed for This" ORDER BY m.movie_id, o.time_schedule
+INSERT INTO transaction_user_onshow (user_id, on_show_id, quantity, total_price) VALUES ({},{},{},{})
