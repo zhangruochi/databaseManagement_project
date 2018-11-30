@@ -1,4 +1,3 @@
-$def with (email)
 <!doctype html>
 <html lang="en">
   <head>
@@ -20,7 +19,7 @@ $def with (email)
 
     <header>
       <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-        <a class="navbar-brand" href="#">Hello, $email</a>
+        <a class="navbar-brand" href="#">Hello, $context.user</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -30,7 +29,10 @@ $def with (email)
               <a class="nav-link" href="/index">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/order">Order</a>
+              <a class="nav-link disabled" href="/profile">Profile</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/trans">Orders</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="/movies">Movies</a>

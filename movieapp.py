@@ -2,6 +2,8 @@ import web
 import pymysql
 from web import form
 from web.contrib.template import render_jinja
+import copy
+
 
 web.config.debug = False
 pymysql.install_as_MySQLdb()
@@ -18,17 +20,23 @@ urls = (
     '/movies(.*)',"Movies",
     '/moviedetail(.*)',"MovieDetail",
     '/movietag(.*)',"MovieTag",
-    '/actor(.*)',"Actor"
-
+    '/actor(.*)',"Actor",
+    '/result',"Result",
+    '/order/(.*)/(.*)',"Order",
+    '/trans', "Transaction",
+    '/profile',"Profile"
 )
 
 
 db = web.database(dbn='mysql', user='root', pw='lv23623600', db='movie_infor')
+
+
 app = web.application(urls, globals())
-session = web.session.Session(app, web.session.DiskStore('sessions'),initializer={'logged_in': False})
+session = web.session.Session(app, web.session.DiskStore('sessions'),initializer={'logged_in': False, 'user':None})
 
 
 render = web.template.render('templates/',globals={'context':session})
+
 
 
 class Index:
@@ -36,10 +44,11 @@ class Index:
         return render.index()
 
 
+
 class Login:
     def GET(self):
         if session.logged_in:
-            return render.user(session.user)
+            return render.user()
         error = False
         return render.login(error)
 
@@ -52,16 +61,18 @@ class Login:
             error = False
             session.logged_in = True
             session.user = email
-            return render.user(session.user)
+            session.id = check[0].id
+            return render.user()
         else:
             error = True
             return render.login(error)
+
+
 
 class Register:
     
     def GET(self):
        return render.register(False)
-
 
     def POST(self):
         raw_data = web.input()
@@ -85,13 +96,17 @@ class Register:
 
 
 
+class Result:
+    def GET(self):
+        return render.result(True)
+
+
 
 
 class Onshow:
     def GET(self):
-        # onshow_movies = db.select("on_show")
-        # return render.onshow(onshow_movies)
-        res = db.query('select movies.title from movies join on_show where movies.movie_id=on_show.movie_id limit 5;')
+    
+        res = db.query('SELECT m.title,o.time_schedule,o.seat_limit, o.id,o.price,t.name,t.district FROM movies m JOIN on_show o ON m.movie_id = o.movie_id JOIN theater t ON t.id = o.thea_id ORDER BY m.movie_id, o.time_schedule')
         if res:
             return render.onshow(res)
         else:
@@ -99,15 +114,26 @@ class Onshow:
     
     def POST(self):
         raw_data = web.input()
-        key = raw_data.get("key")
-        res = db.query('select * from movies where title = $key',vars = {"key":key})
+        title = raw_data.get("title",None)
+        theater = raw_data.get("theater",None)
+        district = raw_data.get("district",None)
+
+        if title:
+            res = db.query("SELECT m.title,o.time_schedule,o.seat_limit, o.id,o.price,t.name,t.district FROM movies m JOIN on_show o ON m.movie_id = o.movie_id JOIN theater t ON t.id = o.thea_id WHERE m.title = $title ORDER BY m.movie_id, o.time_schedule",vars = {"title":title})
+        elif theater:
+            res = db.query("SELECT m.title,o.time_schedule,o.seat_limit, o.id,o.price,t.name,t.district FROM movies m JOIN on_show o ON m.movie_id = o.movie_id JOIN theater t ON t.id = o.thea_id WHERE t.name = $theater ORDER BY m.movie_id, o.time_schedule",vars = {"theater":theater})
+        elif district:
+            res = db.query("SELECT m.title,o.time_schedule,o.seat_limit, o.id,o.price,t.name,t.district FROM movies m JOIN on_show o ON m.movie_id = o.movie_id JOIN theater t ON t.id = o.thea_id WHERE t.district = $district ORDER BY m.movie_id, o.time_schedule",vars = {"district": district})
+
         if res:
-            return render.actor(res)
+            return render.onshow(res)
         else:
             return "can not find"
 
+
+
 class Movies:
-    def GET(self,page):
+    def GET(self,page = None):
         if not page:
             page = 1
 
@@ -163,7 +189,7 @@ class MovieTag:
 
         actors = db.query('SELECT DISTINCT(a.name) FROM movies m JOIN rel_movie_actor r ON m.movie_id = r.movie_id JOIN actor a ON r.actor_id = a.id WHERE title = $title;',vars = {"title": title})
         directors = db.query('SELECT DISTINCT(d.name) FROM director d JOIN movies ON movies.director_id = d.id WHERE title = $title;',vars = {"title": title})
-        ratings = db.query('SELECT r.score,r.text FROM rating r JOIN movies m ON  m.movie_id = r.movie_id WHERE m.title = $title',vars = {"title": title})
+        ratings = db.query('SELECT r.score,r.text,r.user_id FROM rating r JOIN movies m ON  m.movie_id = r.movie_id WHERE m.title = $title',vars = {"title": title})
         movies = db.query('SELECT * FROM movies WHERE title = $title',vars = {"title":title})
         if actors or directors or ratings or movies:
             return render.moviedetail(movies,actors,directors,ratings)
@@ -196,7 +222,7 @@ class User:
         if not session.logged_in:
             return render.login()
         else:
-            return render.user(session.user)
+            return render.user()
 
     def POST(self):
         i = web.input()
@@ -210,14 +236,97 @@ class User:
 
 class MovieDetail:
     def GET(self,title):
+        flag = False
         actors = db.query('SELECT DISTINCT(a.name) FROM movies m JOIN rel_movie_actor r ON m.movie_id = r.movie_id JOIN actor a ON r.actor_id = a.id WHERE title = $title;',vars = {"title": title})
         directors = db.query('SELECT DISTINCT(d.name) FROM director d JOIN movies ON movies.director_id = d.id WHERE title = $title;',vars = {"title": title})
-        ratings = db.query('SELECT r.score,r.text FROM rating r JOIN movies m ON  m.movie_id = r.movie_id WHERE m.title = $title',vars = {"title": title})
-        movies = db.query('SELECT * FROM movies WHERE title = $title',vars = {"title":title})
-        if actors or directors or ratings or movies:
-            return render.moviedetail(movies,actors,directors,ratings)
+        ratings = db.query('SELECT r.score,r.text,r.user_id FROM rating r JOIN movies m ON  m.movie_id = r.movie_id WHERE m.title = $title',vars = {"title": title})
+        movie = db.query('SELECT * FROM movies WHERE title = $title',vars = {"title":title})
+        session.title = title
+        if actors or directors or ratings or movie:
+            return render.moviedetail(movie,actors,directors,ratings)
         else:
             return "error"
+
+    def POST(self,x):
+    
+        raw_data = web.input()
+        user_id = session.id
+        movie_id = db.query('SELECT movie_id FROM movies WHERE title = $title',vars = {"title":session.title})[0].movie_id
+
+        score = raw_data.score
+        comment = raw_data.comment
+        res = db.insert("rating", user_id = user_id, movie_id = movie_id, score = score, text = comment, time = web.SQLLiteral("NOW()"))
+
+        return render.result(True)
+        
+
+
+class Transaction:
+    def GET(self):
+        res = db.query("SELECT t.id,m.title,t.tran_time,t.quantity,t.total_price FROM transaction_user_onshow t  JOIN on_show o ON t.on_show_id = o.id JOIN movies m ON m.movie_id = o.movie_id where t.user_id = {}".format(session.id))   
+        return render.trans(res)
+
+
+
+class Order:
+    def GET(self,on_show_id, num):
+        num = int(num)
+        res = db.query('SELECT m.title,o.time_schedule,o.seat_limit, o.id,o.price,t.name,t.district FROM movies m JOIN on_show o ON m.movie_id = o.movie_id JOIN theater t ON t.id = o.thea_id WHERE o.id = $on_show_id ORDER BY m.movie_id, o.time_schedule', vars = {"on_show_id": on_show_id})[0]
+        
+        if res.seat_limit >= num:
+            db.query("UPDATE on_show o SET o.seat_limit = o.seat_limit - $num WHERE o.id = $on_show_id",vars = {"num":num,"on_show_id":on_show_id})
+            db.query("INSERT INTO transaction_user_onshow (user_id, on_show_id, quantity, total_price) VALUES ({},{},{},{})".format(session.id, on_show_id, num, num*res.price))
+            return render.result(True)
+        else:
+            return render.result(False)
+
+
+    def POST(self):
+        pass
+
+
+class Profile:
+    def GET(self):
+        user = db.query("SELECT * FROM user u where u.id = {}".format(session.id))[0]
+        return render.profile(user)
+
+    def POST(self):
+        raw_data = web.input()
+        account = session.user
+        password = raw_data.get('password', None)
+        name = raw_data.get('name', None)
+        gender = raw_data.get('gender', None)
+        birth = raw_data.get('birth', None)
+        district = raw_data.get('district', None)
+
+        
+        user_infor = db.query("SELECT * FROM user u where u.id = {}".format(session.id))[0]
+
+        if not password:
+            password = user_infor.password
+
+        if not name:
+            name = user_infor.name
+
+        if not gender:
+            gender = user_infor.gender
+
+        if not birth:
+            birth = user_infor.birth
+
+        if not district:
+            district = user_infor.district
+
+
+
+        res = db.query("UPDATE user SET password = \"{}\", birth = \"{}\", district = {}, name = \"{}\", gender = \"{}\"".format(password,birth,district,name,gender))
+        
+        if res:
+            return render.result(True)
+        else:
+            return render.result(False)
+
+
 
 
 

@@ -1,4 +1,4 @@
-$def with (onshow)
+$def with (movies)
 <!doctype html>
 <html lang="en">
   <head>
@@ -15,6 +15,8 @@ $def with (onshow)
 
     <!-- Custom styles for this template -->
     <link href="./static/css/cover.css" rel="stylesheet">
+
+
   </head>
 <body>
   <header>
@@ -26,85 +28,92 @@ $def with (onshow)
         <div class="collapse navbar-collapse" id="navbarCollapse">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-              <a class="nav-link" href="/index">Home</a>
+              <a class="nav-link" href="/index">Home<span class="sr-only"></span></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/movies">Movies</a>
+              <a class="nav-link active" href="/movies">Movies<span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/order">Order</a>
+              <a class="nav-link" href="/trans">Order</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" href="/onshow">Onshow<span class="sr-only">(current)</span></a>
+              <a class="nav-link" href="/onshow">Onshow</a>
             </li>
             <li class="nav-item">
               <a class="nav-link disabled" href="/logout">Logout</a>
             </li>
           </ul>
-
-          <form class="form-inline mt-2 mt-md-0" method=POST>
-            <input class="form-control mr-sm-2" type="text" name="key" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-          </form>
-
         </div>
       </nav>
-    </header>
+  </header>
+        <main>
+        <br><br><br>
+            <center>
+            <h1 class="h3 mb-3 font-weight-normal" style="color:white">Search</h1>
+            </center>
+            
+            <div align="center">
+              <form class="mt-2 mt-md-0" method=POST>
+                <input class="mr-sm-2" type="text" name="title" placeholder="title" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+              </form>
 
-<main role="main">
-      <!-- Three columns of text below the carousel -->
+              <form class="mt-2 mt-md-0" method=POST>
+                <input class="mr-sm-2" type="text" name="theater" placeholder="theater" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+              </form>
 
-      <hr class="featurette-divider">
-
-      <div class="row featurette">
-        <div class="col-md-7">
-          <br>
-          <br>
-          <br>
-          <div class="radio mb-3">
-            On show movie list:<br /><br /> 
-            <label><input name="Order" type="radio" value="" checked/>Order by time </label> 
-            <label><input name="Order" type="radio" value="" />Order by evaluation </label>
-          </div>
+              <form class="mt-2 mt-md-0" method=POST>
+                <input class="mr-sm-2" type="text" name="district" placeholder="district" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+              </form>
+            </div>
+          
           <hr class="featurette-divider">
+
+
           <!-- <h2 class="featurette-heading">First featurette heading. <span class="text-muted">It'll blow your mind.</span></h2> -->
           <!-- <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p> -->
-          $for movie in onshow:
-          <table>
-          <tr>
-            <td>
-              <div class="col-md-3 mb-3">
-                <a href="movie_detail.html" target="_blank" data-act="movie-click" data-val="{movieid:1203437}">
-                  <div>
-                    <img width="150" height="200" src="http://p1.meituan.net/movie/cac9e6514044986747204c41c0a89f4e725343.jpg">
-                  </div>
-                </a>  
-                <div>
-                  <span class="text-muted">purchase</span>
-                </div>
-                <div class="channel-detail movie-item-title" title="Ying">
-                  <a href="/films/1203437" target="_blank" data-act="movies-click" data-val="{movieId:1203437}">$movie</a>
-                </div>
-                <div class="channel-detail channel-detail-orange"><i class="integer">8.</i><i class="fraction">1</i></div>
-              </div>
-            </td>
-          </tr>
-        </table>
-        </div>
-      </div>
+            <table class="table table-bordered">
+               <thead>
+                  <tr style="font-weight:bold">
+                    <th scope="row">title</th>
+                    <td scope="col">schedule</td>
+                    <td scope="col">seat</td>
+                    <td scope="col">price</td>
+                    <td scope="col">theater</td>
+                    <td scope="col">district</td>
+                    <td scope="col">purchase</td>
 
-      <hr class="featurette-divider">
+                  </tr>
+                </thead>
+              <tbody>
+              $for movie in movies:
+                <tr>
+                    <th ><a href="moviedetail$movie.title" style="color: #FF1493"> $movie.title </a></th>
+                    <td >$movie.time_schedule</td>
+                    <td >$movie.seat_limit</td>
+                    <td >$movie.price</td>
+                    <td >$movie.name</td>
+                    <td >$movie.district</td>
+                    $if movie.seat_limit:
+                      <td>
+                      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        quantity <span class="caret"></span>
+                      </button>
+                      <ul class="dropdown-menu" aria-labelledby="dropdownMenu4">
+                        <li><a href="order/$movie.id/1" style="color: black" >1 ticket</a></li>
+                        <li><a href="order/$movie.id/2" style="color: black" >2 tickets</a></li>
+                        <li><a href="order/$movie.id/3" style="color: black" >3 tickets</a></li>
+                      </ul>
+                      </td>
+                    $else:
+                      <td>no seat</td>
 
-
-
-
-
-      <!-- FOOTER -->
-      <footer class="container">
-        <p class="float-right"><a href="#">Back to top</a></p>
-        <p>© 2018-2019 Company, Inc. · <a href="#">Privacy</a> · <a href="#">Terms</a></p>
-      </footer>
-    </main>
+                </tr>
+              </tbody>
+            </table>
+          </main>
 </body>
 
     <!-- Bootstrap core JavaScript

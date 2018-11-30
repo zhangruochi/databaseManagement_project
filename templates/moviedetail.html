@@ -35,7 +35,7 @@ $def with (movies,actors,directors,ratings)
               <a class="nav-link active" href="/movies">Movies<span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/order">Order</a>
+              <a class="nav-link" href="/trans">Order</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="/onshow">Onshow</a>
@@ -71,11 +71,33 @@ $def with (movies,actors,directors,ratings)
           </div>
           <br><br><br>
           <div class="list-group" >
+            $ flag = False
             $if ratings:
               <p class="list-group-item list-group-item-action">Ratings</p>
               $for rating in ratings:
+                $if rating.user_id == context.id:
+                  $ flag = True
                 <p class="list-group-item list-group-item-action list-group-item-warning">$rating.score | $rating.text</p>
           </div>
+          $if flag:
+            <div class="alert">
+              <!-- <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>  -->
+              <p style="color: white">You have Rated this movie</p>
+            </div>
+
+          $else:
+            <br><br><br>
+            <p class="list-group-item list-group-item-action">Rate this movie now!</p>
+            <form class="form-signin" method="POST">
+              <label for="score" class="sr-only">Score</label>
+              <input type="text" name="score" class="form-control" placeholder="1-5" required>
+
+              <label for="comment" class="sr-only">Comment</label>
+              <input type="text" name="comment" class="form-control" placeholder="good movie!" required>
+
+              <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
+            </form>
+
       </div>
       
 </body>
