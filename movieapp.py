@@ -24,7 +24,9 @@ urls = (
     '/result',"Result",
     '/order/(.*)/(.*)',"Order",
     '/trans', "Transaction",
-    '/profile',"Profile"
+    '/profile',"Profile",
+    '/delete(.*)',"Delete",
+    '/management(.*)',"Management"
 )
 
 
@@ -32,7 +34,7 @@ db = web.database(dbn='mysql', user='root', pw='lv23623600', db='movie_infor')
 
 
 app = web.application(urls, globals())
-session = web.session.Session(app, web.session.DiskStore('sessions'),initializer={'logged_in': False, 'user':None})
+session = web.session.Session(app, web.session.DiskStore('sessions'),initializer={'logged_in': 0, 'user':None})
 
 
 render = web.template.render('templates/',globals={'context':session})
@@ -47,8 +49,12 @@ class Index:
 
 class Login:
     def GET(self):
-        if session.logged_in:
+        if session.user and session.logged_in == 2:
             return render.user()
+        elif session.user and session.logged_in == 1:
+            theaters = db.query("SELECT DISTINCT(name) FROM theater WHERE operator = {}".format(session.id))
+            return render.operator(theaters)
+        
         error = False
         return render.login(error)
 
@@ -56,16 +62,43 @@ class Login:
         raw_data = web.input()
         email = raw_data.get('email')
         passwd = raw_data.get('passwd')
-        check = db.query('select * from user where account = $email and password = $passwd', vars = {'email':email, 'passwd': passwd})
-        if check:
+        check_user = db.query('select * from user where account = $email and password = $passwd', vars = {'email':email, 'passwd': passwd})
+        
+        check_operator = db.query('select * from operator where account = $email and password = $passwd', vars = {'email':email, 'passwd': passwd})
+
+
+        if check_user:
             error = False
-            session.logged_in = True
+            session.logged_in = 2
             session.user = email
-            session.id = check[0].id
+            session.id = check_user[0].id
             return render.user()
+        elif check_operator:
+            error = False
+            session.logged_in = 1
+            session.user = email
+            session.id = check_operator[0].id
+            theaters = db.query("SELECT DISTINCT(name) FROM theater WHERE operator = {}".format(session.id))
+
+            return render.operator(theaters)
         else:
             error = True
             return render.login(error)
+
+
+class Management:
+    def GET(self,name):
+        movies = db.query("SELECT m.title,o.time_schedule,o.seat_limit, o.id,o.price,t.name,t.district,t.operator FROM movies m JOIN on_show o ON m.movie_id = o.movie_id JOIN theater t ON t.id = o.thea_id WHERE t.operator = $operator and t.name = $name ORDER BY m.movie_id, o.time_schedule",vars = {"operator":session.id, "name":name})
+        return render.management(movies)
+
+
+
+
+class Delete:
+    def GET(self,id):
+        db.query("DELETE FROM on_show WHERE id = {}".format(id))
+        return render.result(True)
+
 
 
 
