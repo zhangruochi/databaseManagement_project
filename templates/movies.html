@@ -28,16 +28,19 @@ $def with (movies,page)
         <div class="collapse navbar-collapse" id="navbarCollapse">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-              <a class="nav-link" href="/index">Home<span class="sr-only"></span></a>
+              <a class="nav-link" href="/index">Home </a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link active" href="/movies">Movies<span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/trans">Order</a>
+            <li class="nav-item active">
+              <a class="nav-link" href="/movies">Movies<span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="/onshow">Onshow</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/trans">Orders</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/profile">Profile</a>
             </li>
             <li class="nav-item">
               <a class="nav-link disabled" href="/logout">Logout</a>
@@ -68,7 +71,7 @@ $def with (movies,page)
               <td>Genre:</td>
 
               <td>
-                <a role="button"  class="btn btn-outline-danger">ALL</a>
+                <a role="button"  href="#" class="btn btn-outline-danger">ALL</a>
               </td>
               <td>
                 <a role="button" href="/movietagAdventure"  class="btn btn-outline-secondary">Adventure</a>
@@ -86,14 +89,14 @@ $def with (movies,page)
                 <td>
                 </td>
                 <td>
-                  <a role="button" href="/"  class="btn btn-outline-success">Sci-Fi</a>
-                  <a role="button" href="/"  class="btn btn-outline-primary">Musical</a>
-                  <a role="button" href="/"  class="btn btn-outline-warning">Family</a>
-                  <a role="button" href="/"  class="btn btn-outline-info">Fantasy</a>
-                  <a role="button" href="/"  class="btn btn-outline-light">Mystery</a>
-                  <a role="button" href="/"  class="btn btn-outline-info">War</a>
-                  <a role="button" href="/"  class="btn btn-outline-success">Romance</a>
-                  <a role="button" href="/"  class="btn btn-outline-primary">Western</a>
+                  <a role="button" href="/movietagSci-Fi"  class="btn btn-outline-success">Sci-Fi</a>
+                  <a role="button" href="/movietagMusical"  class="btn btn-outline-primary">Musical</a>
+                  <a role="button" href="/movietagFamily"  class="btn btn-outline-warning">Family</a>
+                  <a role="button" href="/movietagFantasy"  class="btn btn-outline-info">Fantasy</a>
+                  <a role="button" href="/movietagMystery"  class="btn btn-outline-light">Mystery</a>
+                  <a role="button" href="/movietagWar"  class="btn btn-outline-info">War</a>
+                  <a role="button" href="/movietagRomance"  class="btn btn-outline-success">Romance</a>
+                  <a role="button" href="/movietagWestern"  class="btn btn-outline-primary">Western</a>
                 </td>
               </tr>
               <tr>
@@ -120,22 +123,24 @@ $def with (movies,page)
                 </td>
                 
                 <td>
-                  <a role="button" href="/" class="btn btn-outline-secondary">R</a>
-                  <a role="button" href="/" class="btn btn-outline-success">PG-13</a>
-                  <a role="button" href="/" class="btn btn-outline-primary">PG</a>
-                  <a role="button" href="/" class="btn btn-outline-warning">G</a>
-                  <a role="button" href="/" class="btn btn-outline-info">NC-17</a>
-                  <a role="button" href="/" class="btn btn-outline-light">TV-PG</a>
-                  <a role="button" href="/" class="btn btn-outline-warning">TV-MA</a>
-                  <a role="button" href="/" class="btn btn-outline-info">B</a>
-                  <a role="button" href="/" class="btn btn-outline-light">B15</a>
-                  <a role="button" href="/" class="btn btn-outline-light">TV-14</a>
+                  <a role="button" href="/movietagR" class="btn btn-outline-secondary">R</a>
+                  <a role="button" href="/movietagPG-13" class="btn btn-outline-success">PG-13</a>
+                  <a role="button" href="/movietagPG" class="btn btn-outline-primary">PG</a>
+                  <a role="button" href="/movietagG" class="btn btn-outline-warning">G</a>
+                  <a role="button" href="/movietagNC-17" class="btn btn-outline-info">NC-17</a>
+                  <a role="button" href="/movietagTV-PG" class="btn btn-outline-light">TV-PG</a>
+                  <a role="button" href="/movietagTV-MA" class="btn btn-outline-warning">TV-MA</a>
+                  <a role="button" href="/movietagB" class="btn btn-outline-info">B</a>
+                  <a role="button" href="/movietagB15" class="btn btn-outline-light">B15</a>
+                  <a role="button" href="/movietagTV-14" class="btn btn-outline-light">TV-14</a>
                 </td>
               
               </tr>
             </table>
 
           </div>
+          <br>
+          <br>
 
 
           <!-- <h2 class="featurette-heading">First featurette heading. <span class="text-muted">It'll blow your mind.</span></h2> -->

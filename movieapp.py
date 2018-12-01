@@ -26,7 +26,7 @@ urls = (
     '/trans', "Transaction",
     '/profile',"Profile",
     '/delete(.*)',"Delete",
-    '/management(.*)',"Management"
+    '/director(.*)',"Director"
 )
 
 
@@ -205,10 +205,14 @@ class Movies:
 
 class MovieTag:
     def GET(self,tag):
-        genre = {"Adventure","Comedy","Action","Drama","Crime","Thriller", "Animation", "Biography"}
+        genre = {"Adventure","Comedy","Action","Drama","Crime","Thriller", "Animation", "Biography","Sci-Fi","Musical","Family","Fantasy","Mystery","War","Romance","Western"}
+        rating = {"R","PG-13","PG","G","NC-17","TV-PG","TV-MA","B","B15","TV-14"}
         if tag in genre:
             got_movies = db.select('movies',order='movie_id', where="genre = $tag",vars = {"tag":tag})
-
+        if tag in rating:
+            got_movies = db.query('SELECT * FROM movies WHERE rating = $tag ORDER BY movie_id',vars = {"tag":tag})
+        if tag == "All" :
+            got_movies = db.query('SELECT * FROM movies ORDER BY movie_id')
 
         if got_movies:
             return render.movietag(got_movies)
@@ -232,9 +236,18 @@ class MovieTag:
 
 class Actor:
     def GET(self,name):
-        res = db.query('SELECT * from actor WHERE name = $name',vars = {"name":name})
+        res = db.query('SELECT * from actor WHERE name = $name',vars = {"name":name})[0]
         if res:
             return render.actor(res)
+        else:
+            return "error"
+
+
+class Director:
+    def GET(self,name):
+        res = db.query('SELECT * from director WHERE name = $name',vars = {"name":name})[0]
+        if res:
+            return render.director(res)
         else:
             return "error"
 

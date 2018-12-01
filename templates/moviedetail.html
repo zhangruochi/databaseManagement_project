@@ -29,16 +29,19 @@ $def with (movies,actors,directors,ratings)
         <div class="collapse navbar-collapse" id="navbarCollapse">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-              <a class="nav-link" href="/index">Home<span class="sr-only"></span></a>
+              <a class="nav-link" href="/index">Home </a>
             </li>
-            <li class="nav-item">
-              <a class="nav-link active" href="/movies">Movies<span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/trans">Order</a>
+            <li class="nav-item active">
+              <a class="nav-link" href="/movies">Movies<span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="/onshow">Onshow</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/trans">Orders</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/profile">Profile</a>
             </li>
             <li class="nav-item">
               <a class="nav-link disabled" href="/logout">Logout</a>
@@ -52,28 +55,37 @@ $def with (movies,actors,directors,ratings)
           <div class="list-group" >
             $if movies:
               $for movie in movies: 
-                <p class="list-group-item list-group-item-action ">Movie: $movie.title</p>
-                <p class="list-group-item list-group-item-action list-group-item-success">company: $movie.company</p>
-                <p class="list-group-item list-group-item-action list-group-item-success">budget: $movie.budget</p>
-                <p class="list-group-item list-group-item-action list-group-item-success">genre: $movie.genre</p>
-                <p class="list-group-item list-group-item-action list-group-item-success">gross: $movie.gross</p>
-                <p class="list-group-item list-group-item-action list-group-item-success">rating: $movie.rating</p>
-                <p class="list-group-item list-group-item-action list-group-item-success">release time: $movie.release_time</p>
-                <p class="list-group-item list-group-item-action list-group-item-success">run time: $movie.runtime</p>
-                <p class="list-group-item list-group-item-action list-group-item-success">year: $movie.year</p>
+                <p class="list-group-item list-group-item-action ">Movie: <strong>$movie.title</strong></p>
+                <p class="list-group-item list-group-item-action list-group-item-success">Company: <strong>$movie.company</strong></p>
+                <p class="list-group-item list-group-item-action list-group-item-success">Budget: <strong>$movie.budget</strong></p>
+                <p class="list-group-item list-group-item-action list-group-item-success">Genre: <strong>$movie.genre</strong></p>
+                <p class="list-group-item list-group-item-action list-group-item-success">Gross: <strong>$movie.gross</strong></p>
+                <p class="list-group-item list-group-item-action list-group-item-success">Rating: <strong>$movie.rating</strong></p>
+                <p class="list-group-item list-group-item-action list-group-item-success">Release time: <strong>$movie.release_time</strong></p>
+                <p class="list-group-item list-group-item-action list-group-item-success">Run time: <strong>$movie.runtime</strong></p>
+                <p class="list-group-item list-group-item-action list-group-item-success">Year: <strong>$movie.year</strong></p>
           </div>
           <br><br><br>
           <div class="list-group" >
             $if actors:
-              <p class="list-group-item list-group-item-action">Actors</p>
+              <p class="list-group-item list-group-item-action">Actor list (click on the actor below to explore details)</p>
               $for actor in actors:
-                  <a href="/actor$actor.name" class="list-group-item list-group-item-action list-group-item-danger">actor: $actor.name</a>
+                  <a href="/actor$actor.name" class="list-group-item list-group-item-action list-group-item-danger">
+                    Actor: <stong>$actor.name</stong></a>
+          </div>
+          <br><br><br>
+          <div class="list-group" >
+            $if directors:
+              <p class="list-group-item list-group-item-action">Director list (click on the director below to explore details)</p>
+              $for director in directors:
+                  <a href="/director$director.name" class="list-group-item list-group-item-action list-group-item-info">
+                    Director: <stong>$director.name</stong></a>
           </div>
           <br><br><br>
           <div class="list-group" >
             $ flag = False
             $if ratings:
-              <p class="list-group-item list-group-item-action">Ratings</p>
+              <p class="list-group-item list-group-item-action">Rating list (Rating | Comment)</p>
               $for rating in ratings:
                 $if rating.user_id == context.id:
                   $ flag = True
@@ -87,13 +99,13 @@ $def with (movies,actors,directors,ratings)
 
           $else:
             <br><br><br>
-            <p class="list-group-item list-group-item-action">Rate this movie now!</p>
+            <p class="list-group-item list-group-item-action">Rate this movie now !</p>
             <form class="form-signin" method="POST">
               <label for="score" class="sr-only">Score</label>
-              <input type="text" name="score" class="form-control" placeholder="1-5" required>
+              <input type="text" name="score" class="form-control" placeholder="You can rate here: (rate from 1 to 5 )" required>
 
               <label for="comment" class="sr-only">Comment</label>
-              <input type="text" name="comment" class="form-control" placeholder="good movie!" required>
+              <input type="text" name="comment" class="form-control" placeholder="You can comment here: (such as: Excellent !)" required>
 
               <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
             </form>
