@@ -20,6 +20,7 @@ urls = (
     '/movies(.*)',"Movies",
     '/moviedetail(.*)',"MovieDetail",
     '/movietag(.*)',"MovieTag",
+    '/management(.*)',"Management",
     '/actor(.*)',"Actor",
     '/result',"Result",
     '/order/(.*)/(.*)',"Order",

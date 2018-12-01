@@ -28,6 +28,7 @@
                 <a class="nav-link" href="/login">Login</a>
             $if context.logged_in == 2:
                 <a class="nav-link" href="/user">User</a>
+            $if context.logged_in == 2 or context.logged_in == 1:
                 <a class="nav-link" href="/logout">Logout</a>
 
         
