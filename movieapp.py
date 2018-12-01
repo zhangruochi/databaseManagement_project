@@ -26,7 +26,9 @@ urls = (
     '/trans', "Transaction",
     '/profile',"Profile",
     '/delete(.*)',"Delete",
-    '/director(.*)',"Director"
+    '/director(.*)',"Director",
+    '/statistic',"Statistic"
+
 )
 
 
@@ -167,6 +169,13 @@ class Onshow:
 
 class Movies:
     def GET(self,page = None):
+        
+        if not session.logged_in:
+            return web.seeother("/register")
+
+        if session.logged_in != 2:
+            return web.seeother("/")
+
         if not page:
             page = 1
 
@@ -204,14 +213,32 @@ class Movies:
 
 
 class MovieTag:
+    
     def GET(self,tag):
+        if not session.logged_in:
+            return web.seeother("/register")
+
+        if session.logged_in != 2:
+            return web.seeother("/")
+
         genre = {"Adventure","Comedy","Action","Drama","Crime","Thriller", "Animation", "Biography","Sci-Fi","Musical","Family","Fantasy","Mystery","War","Romance","Western"}
         rating = {"R","PG-13","PG","G","NC-17","TV-PG","TV-MA","B","B15","TV-14"}
+        
+        years = {"After2018","2015-2018","2010-2015","2005-2010","2000-2005","1995-2000","1990-1995","Before1990"}
+
         if tag in genre:
             got_movies = db.select('movies',order='movie_id', where="genre = $tag",vars = {"tag":tag})
-        if tag in rating:
+        elif tag in rating:
             got_movies = db.query('SELECT * FROM movies WHERE rating = $tag ORDER BY movie_id',vars = {"tag":tag})
-        if tag == "All" :
+        elif tag in years:
+            tmp = tag.split("-")
+            if len(tmp) == 1 and tmp[0].startswith("After"):
+                got_movies = db.query('SELECT * FROM movies WHERE year >= $year ORDER BY movie_id',vars = {"year":tmp[0].lstrip("After")})
+            elif len(tmp) == 1 and tmp[0].startswith("Before"):
+                got_movies = db.query('SELECT * FROM movies WHERE year < $year ORDER BY movie_id',vars = {"year":tmp[0].lstrip("Before")})
+            elif len(tmp) == 2:
+                got_movies = db.query('SELECT * FROM movies WHERE year Between $year_left and  $year_right ORDER BY movie_id',vars = {"year_left":tmp[0],"year_right": tmp[1]})
+        elif tag == "All" :
             got_movies = db.query('SELECT * FROM movies ORDER BY movie_id')
 
         if got_movies:
@@ -236,6 +263,12 @@ class MovieTag:
 
 class Actor:
     def GET(self,name):
+        if not session.logged_in:
+            return web.seeother("/register")
+
+        if session.logged_in != 2:
+            return web.seeother("/")
+
         res = db.query('SELECT * from actor WHERE name = $name',vars = {"name":name})[0]
         if res:
             return render.actor(res)
@@ -282,6 +315,13 @@ class User:
 
 class MovieDetail:
     def GET(self,title):
+
+        if not session.logged_in:
+            return web.seeother("/register")
+
+        if session.logged_in != 2:
+            return web.seeother("/")
+
         flag = False
         actors = db.query('SELECT DISTINCT(a.name) FROM movies m JOIN rel_movie_actor r ON m.movie_id = r.movie_id JOIN actor a ON r.actor_id = a.id WHERE title = $title;',vars = {"title": title})
         directors = db.query('SELECT DISTINCT(d.name) FROM director d JOIN movies ON movies.director_id = d.id WHERE title = $title;',vars = {"title": title})
@@ -309,6 +349,12 @@ class MovieDetail:
 
 class Transaction:
     def GET(self):
+        if not session.logged_in:
+            return web.seeother("/register")
+
+        if session.logged_in != 2:
+            return web.seeother("/")
+
         res = db.query("SELECT t.id,m.title,t.tran_time,t.quantity,t.total_price FROM transaction_user_onshow t  JOIN on_show o ON t.on_show_id = o.id JOIN movies m ON m.movie_id = o.movie_id where t.user_id = {}".format(session.id))   
         return render.trans(res)
 
@@ -316,6 +362,12 @@ class Transaction:
 
 class Order:
     def GET(self,on_show_id, num):
+        if not session.logged_in:
+            return web.seeother("/register")
+
+        if session.logged_in != 2:
+            return web.seeother("/")
+
         num = int(num)
         res = db.query('SELECT m.title,o.time_schedule,o.seat_limit, o.id,o.price,t.name,t.district FROM movies m JOIN on_show o ON m.movie_id = o.movie_id JOIN theater t ON t.id = o.thea_id WHERE o.id = $on_show_id ORDER BY m.movie_id, o.time_schedule', vars = {"on_show_id": on_show_id})[0]
         
@@ -333,6 +385,12 @@ class Order:
 
 class Profile:
     def GET(self):
+        if not session.logged_in:
+            return web.seeother("/register")
+
+        if session.logged_in != 2:
+            return web.seeother("/")
+
         user = db.query("SELECT * FROM user u where u.id = {}".format(session.id))[0]
         return render.profile(user)
 
@@ -371,6 +429,51 @@ class Profile:
             return render.result(True)
         else:
             return render.result(False)
+
+
+
+class Statistic:
+    def GET(self,page = None):
+        
+        if not session.logged_in:
+            return web.seeother("/register")
+
+        if session.logged_in != 2:
+            return web.seeother("/")
+
+        if not page:
+            page = 1
+
+        NavNum = 20
+        results = db.query("SELECT COUNT(*) AS c FROM movies")
+        count = results[0].c
+
+        if count % NavNum==0:
+            pages = count // NavNum
+        else:
+            pages = count // (NavNum + 1)
+
+        off = (int(page)-1) * NavNum
+        got_movies = db.select('movies',order='movie_id',limit = NavNum,offset = off)
+
+        if got_movies:
+            return render.statistic(got_movies,int(page))
+        else:
+            return "Can not find any movie."
+
+    def POST(self,x):
+
+        raw_data = web.input()
+        title = raw_data.get("key")
+
+        actors = db.query('SELECT DISTINCT(a.name) FROM movies m JOIN rel_movie_actor r ON m.movie_id = r.movie_id JOIN actor a ON r.actor_id = a.id WHERE title = $title;',vars = {"title": title})
+        directors = db.query('SELECT DISTINCT(d.name) FROM director d JOIN movies ON movies.director_id = d.id WHERE title = $title;',vars = {"title": title})
+        ratings = db.query('SELECT r.score,r.text FROM rating r JOIN movies m ON  m.movie_id = r.movie_id WHERE m.title = $title',vars = {"title": title})
+        movies = db.query('SELECT * FROM movies WHERE title = $title',vars = {"title":title})
+        if actors or directors or ratings or movies:
+            return render.moviedetail(movies,actors,directors,ratings)
+        else:
+            return "no movies"
 
 
 
