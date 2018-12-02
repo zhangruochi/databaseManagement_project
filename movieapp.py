@@ -207,11 +207,13 @@ class Movies:
         actors = db.query('SELECT DISTINCT(a.name) FROM movies m JOIN rel_movie_actor r ON m.movie_id = r.movie_id JOIN actor a ON r.actor_id = a.id WHERE title = $title;',vars = {"title": title})
         directors = db.query('SELECT DISTINCT(d.name) FROM director d JOIN movies ON movies.director_id = d.id WHERE title = $title;',vars = {"title": title})
         ratings = db.query('SELECT r.score,r.text,r.user_id FROM rating r JOIN movies m ON  m.movie_id = r.movie_id WHERE m.title = $title',vars = {"title": title})
-        movies = db.query('SELECT * FROM movies WHERE title = $title',vars = {"title":title})
+        movies = [db.query('SELECT * FROM movies WHERE title = $title',vars = {"title":title}).first()]
 
-        if not movies:
+
+        if movies == [None]:
             movies = db.query('SELECT * FROM movies WHERE title LIKE \"%{}%\"'.format(title))
             amb = True
+
 
         if actors or directors or ratings or movies:
             return render.moviedetail(movies,actors,directors,ratings,amb)
@@ -456,11 +458,11 @@ class Statistic:
             return web.seeother("/")
 
         current_gross = db.query("SELECT m.title, sum(t.total_price) AS total FROM movies m JOIN on_show o ON m.movie_id = o.movie_id JOIN transaction_user_onshow t ON t.on_show_id = o.id GROUP BY m.movie_id ORDER BY total DESC LIMIT 10")
-        top_rated = db.query("SELECT m.title, AVG(r.score) AS a FROM movies m JOIN Rating r ON r.movie_id = m.movie_id GROUP BY m.movie_id ORDER BY  a DESC LIMIT 10")
+        top_rated = db.query("SELECT m.title, AVG(r.score) AS score FROM movies m JOIN Rating r ON r.movie_id = m.movie_id GROUP BY m.movie_id ORDER BY  score DESC LIMIT 10")
 
 
         def read(tx):
-            res = tx.run("MATCH P1 = ((user {id:'93'})-[r:rate]->(m:Movie)),P2 = ((m:Movie)-[:same_community]->(m2:Movie)) RETURN P2 LIMIT 3")
+            res = tx.run("MATCH P1 = ((user {{id: {}}})-[r:rate]->(m:Movie)),P2 = ((m:Movie)-[:same_community]->(m2:Movie)) RETURN P2 LIMIT 3".format(session.id))
             
             ans = []
             for record in res:
@@ -470,6 +472,13 @@ class Statistic:
         with driver.session() as neo:
             recommends_id = neo.write_transaction(read)
 
+
+        def func(item):
+            return item.movie_id
+
+        if len(recommends_id) < 3:
+            res = db.query("SELECT m.movie_id, AVG(r.score) AS score FROM movies m JOIN Rating r ON r.movie_id = m.movie_id GROUP BY m.movie_id ORDER BY  score DESC LIMIT 3")
+            recommends_id = list(map(func,list(res)))
 
         recommends_movies = db.query("SELECT * FROM movies WHERE movie_id in ({},{},{})".format(*recommends_id))
 
