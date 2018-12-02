@@ -1,5 +1,7 @@
 import math  
 import csv
+import pymysql
+import pandas as pd
   
 class ItemBasedCF:  
     def __init__(self,train_file):  
@@ -14,7 +16,9 @@ class ItemBasedCF:
             tmp_line = line.strip().split(",") 
             user = tmp_line[2]
             item = tmp_line[1]
-            score = tmp_line[3] 
+            score = tmp_line[3]
+            if score == "score":
+                continue
             self.train.setdefault(user,{})  
             self.train[user][item] = int(float(score))  
               
@@ -61,6 +65,7 @@ class ItemBasedCF:
                     relation_set.add((movie,other))
 
         with open("movie_rela.csv","w") as f:
+            f.write("{},{}\n".format("id1","id2"))
             for rela in relation_set:
                 f.write("{},{}\n".format(rela[0],rela[1]))
 
@@ -69,6 +74,49 @@ class ItemBasedCF:
 #声明一个ItemBased推荐的对象      
 Item = ItemBasedCF("rating.csv")  
 Item.ItemSimilarity()  
-recommedDic = Item.Recommend("201")  
+recommedDic = Item.Recommend("20")  
 for k,v in recommedDic.items():  
     print(k,"\t",v)  
+
+
+
+
+def get_ratings():
+    conn = pymysql.connect(user='root',password='lv23623600', \
+    db='movie_infor',use_unicode=True)
+
+    sql = 'select * from rating'
+    df = pd.read_sql(sql, con=conn)
+    df.to_csv("rating.csv")
+    conn.close()
+
+
+def get_user():
+    conn = pymysql.connect(user='root',password='lv23623600', \
+    db='movie_infor',use_unicode=True)
+
+    sql = 'select * from user'
+    df = pd.read_sql(sql, con=conn)
+    print(df.head())
+    df.to_csv("user.csv")
+    conn.close()
+
+
+
+def get_movie():
+    conn = pymysql.connect(user='root',password='lv23623600', \
+    db='movie_infor',use_unicode=True)
+
+    sql = 'SELECT * FROM movies WHERE movie_id in (SELECT movie_id FROM rating)'
+    df = pd.read_sql(sql, con=conn)
+    print(df.head())
+    df.to_csv("movies.csv")
+    conn.close()
+
+
+
+get_ratings()
+get_user()
+get_movie()
+
+

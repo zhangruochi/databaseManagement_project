@@ -33,19 +33,23 @@ def read(tx):
         ans.append(record["P2"].start.id)
     return ans
 
+def create_community_attr(tx):
+    tx.run("CALL algo.louvain('Movie', 'related_movie', {write:true, writeProperty:'community'}) YIELD nodes, communityCount, iterations, loadMillis, computeMillis, writeMillis;")
 
 
+
+def create_community(tx):
+    tx.run("MATCH (m1:Movie),(m2:Movie) where m1.community = m2.community and m1.id <> m2.id CREATE (m1)-[r:same_community]->(m2)  RETURN r LIMIT 20")
 
 with driver.session() as session:
     #session.write_transaction(add_friend, "Arthur", "Guinevere")
 
-    #session.write_transaction(add_user)
-    #session.write_transaction(add_movie)
-    #session.write_transaction(add_rating_rela)
-    #session.write_transaction(add_same_dire)
-    #session.write_transaction(add_same_genre)
-    #session.write_transaction(add_related_movie)
-    session.write_transaction(read)
+    session.write_transaction(add_user)
+    session.write_transaction(add_movie)
+    session.write_transaction(add_rating_rela)
+    session.write_transaction(add_related_movie)
+    session.write_transaction(create_community_attr)
+    session.write_transaction(create_community)
 
 
 
