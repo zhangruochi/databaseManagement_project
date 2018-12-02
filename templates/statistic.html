@@ -1,4 +1,4 @@
-$def with (movies,page)
+$def with (current_gross,top_rated,recommends_movies)
 <!doctype html>
 <html lang="en">
   <head>
@@ -49,145 +49,41 @@ $def with (movies,page)
         </div>
       </nav>
   </header>
-        <main>
-        <br><br><br>
-            <center>
-            <h1 class="h3 mb-3 font-weight-normal" style="color:white">Movie</h1>
-            </center>
-            
-            <div align="center">
-              <form class="mt-2 mt-md-0" method=POST>
-                <input class="mr-sm-2" type="text" name="key" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-              </form>
-            </div>
-            
 
-          
-          <hr class="featurette-divider">
 
-          <div>
-            <table>
-              <td>Genre:</td>
-
-              <td>
-                <a role="button"  href="#" class="btn btn-outline-danger">ALL</a>
-              </td>
-              <td>
-                <a role="button" href="/movietagAdventure"  class="btn btn-outline-secondary">Adventure</a>
-                <a role="button" href="/movietagComedy"  class="btn btn-outline-success">Comedy</a>
-                <a role="button" href="/movietagAction"  class="btn btn-outline-primary">Action</a>
-                <a role="button" href="/movietagDrama"  class="btn btn-outline-warning">Drama</a>
-                <a role="button" href="/movietagCrime"  class="btn btn-outline-info">Crime</a>
-                <a role="button" href="/movietagThriller"  class="btn btn-outline-light">Thriller</a>
-                <a role="button" href="/movietagAnimation"  class="btn btn-outline-info">Animation</a>
-                <a role="button" href="/movietagBiography"  class="btn btn-outline-secondary">Biography</a>
-              </td>
-              <tr>
-                <td>
-                </td>
-                <td>
-                </td>
-                <td>
-                  <a role="button" href="/movietagSci-Fi"  class="btn btn-outline-success">Sci-Fi</a>
-                  <a role="button" href="/movietagMusical"  class="btn btn-outline-primary">Musical</a>
-                  <a role="button" href="/movietagFamily"  class="btn btn-outline-warning">Family</a>
-                  <a role="button" href="/movietagFantasy"  class="btn btn-outline-info">Fantasy</a>
-                  <a role="button" href="/movietagMystery"  class="btn btn-outline-light">Mystery</a>
-                  <a role="button" href="/movietagWar"  class="btn btn-outline-info">War</a>
-                  <a role="button" href="/movietagRomance"  class="btn btn-outline-success">Romance</a>
-                  <a role="button" href="/movietagWestern"  class="btn btn-outline-primary">Western</a>
-                </td>
-              </tr>
-              <tr>
-                <td>Year:</td>
-                <td>
-                  <a role="button" href="/movietagAll"  class="btn btn-outline-danger">ALL</a>
-                </td>
-                <td>
-                  <a role="button" href="/movietagAfter2018"  class="btn btn-outline-secondary">After 2018</a>
-                  <a role="button" href="/movietag2015-2018"  class="btn btn-outline-success">2015-2018</a>
-                  <a role="button" href="/movietag2010-2015"  class="btn btn-outline-primary">2010-2015</a>
-                  <a role="button" href="/movietag2005-2010"  class="btn btn-outline-warning">2005-2010</a>
-                  <a role="button" href="/movietag2000-2005"  class="btn btn-outline-info">2000-2005</a>
-                  <a role="button" href="/movietag1995-2000"  class="btn btn-outline-info">1995-2000</a>
-                  <a role="button" href="/movietag1990-1995"  class="btn btn-outline-info">1990-1995</a>
-                  <a role="button" href="/movietagBefore1990"  class="btn btn-outline-light">Before 1990</a>
-                </td>
-              </tr>
-
-              <tr>
-                
-                <td>Rating:</td>
-                
-                <td>
-                  <a role="button" href="/" class="btn btn-outline-danger">ALL</a>
-                </td>
-                
-                <td>
-                  <a role="button" href="/movietagR" class="btn btn-outline-secondary">R</a>
-                  <a role="button" href="/movietagPG-13" class="btn btn-outline-success">PG-13</a>
-                  <a role="button" href="/movietagPG" class="btn btn-outline-primary">PG</a>
-                  <a role="button" href="/movietagG" class="btn btn-outline-warning">G</a>
-                  <a role="button" href="/movietagNC-17" class="btn btn-outline-info">NC-17</a>
-                  <a role="button" href="/movietagTV-PG" class="btn btn-outline-light">TV-PG</a>
-                  <a role="button" href="/movietagTV-MA" class="btn btn-outline-warning">TV-MA</a>
-                  <a role="button" href="/movietagB" class="btn btn-outline-info">B</a>
-                  <a role="button" href="/movietagB15" class="btn btn-outline-light">B15</a>
-                  <a role="button" href="/movietagTV-14" class="btn btn-outline-light">TV-14</a>
-                </td>
-              
-              </tr>
-            </table>
-
+  <div style="float: left;width:80%;">
+          <br><br><br>
+          <div class="list-group" >
+            $if recommends_movies:
+              $for movie in recommends_movies:
+                <p class="list-group-item list-group-item-action"><strong> Recommendation Movies </strong></p>
+                <p class="list-group-item list-group-item-action list-group-item-success">Movie: <strong>$movie.title</strong></p>
+                <p class="list-group-item list-group-item-action list-group-item-success">Company: <strong>$movie.company</strong></p>
+                <p class="list-group-item list-group-item-action list-group-item-success">Budget: <strong>$movie.budget</strong></p>
+                <p class="list-group-item list-group-item-action list-group-item-success">Genre: <strong>$movie.genre</strong></p>
+                <p class="list-group-item list-group-item-action list-group-item-success">Gross: <strong>$movie.gross</strong></p>
+                <p class="list-group-item list-group-item-action list-group-item-success">Rating: <strong>$movie.rating</strong></p>
+                <p class="list-group-item list-group-item-action list-group-item-success">Release time: <strong>$movie.release_time</strong></p>
+                <p class="list-group-item list-group-item-action list-group-item-success">Run time: <strong>$movie.runtime</strong></p>
+                <p class="list-group-item list-group-item-action list-group-item-success">Year: <strong>$movie.year</strong></p>
           </div>
-          <br>
-          <br>
+          <br><br><br>
+          <div class="list-group" >
+              $for rate in top_rated:
+                <p class="list-group-item list-group-item-action"><strong>Top 10 Rated Movies</strong></p>
+                <p class="list-group-item list-group-item-action list-group-item-info">Movie: <strong>$rate.title</strong></p>
+                <p class="list-group-item list-group-item-action list-group-item-info">Score: <strong>$rate.score</strong></p>
+          </div>
+          <br><br><br>
+          <div class="list-group" >
+              $for movie in current_gross:
+                <p class="list-group-item list-group-item-action"><strong>Current Top 10 Popular Movies</strong></p>
+                <p class="list-group-item list-group-item-action list-group-item-danger">Movie: <strong>$movie.title</strong></p>
+                <p class="list-group-item list-group-item-action list-group-item-danger">Current Gross: <strong>$movie.total</strong></p>
+                  
+          </div>
+      </div>
 
-
-          <!-- <h2 class="featurette-heading">First featurette heading. <span class="text-muted">It'll blow your mind.</span></h2> -->
-          <!-- <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p> -->
-            <table class="table table-bordered">
-               <thead>
-                  <tr style="font-weight:bold">
-                    <th scope="row">#</th>
-                    <td scope="col">title</td>
-                    <td scope="col">company</td>
-                    <td scope="col">budget</td>
-                    <td scope="col">genre</td>
-                    <td scope="col">gross</td>
-                    <td scope="col">rating</td>
-                    <td scope="col">release_time</td>
-                    <td scope="col">run_time</td>
-                    <td scope="col">year</td>
-                  </tr>
-                </thead>
-              <tbody>
-              $for movie in movies:
-                <tr>
-                  <th scope="row">$movie.movie_id</th>
-                    <td ><a href="moviedetail$movie.title" style="color: #FF1493"> $movie.title </a></td>
-                    <td >$movie.company</td>
-                    <td >$movie.budget</td>
-                    <td >$movie.genre</td>
-                    <td >$movie.gross</td>
-                    <td >$movie.rating</td>
-                    <td >$movie.release_time</td>
-                    <td >$movie.runtime</td>
-                    <td >$movie.year</td>
-                </tr>
-              </tbody>
-            </table>
-            <nav aria-label="Page navigation" style="align:center">
-              <ul class="pagination">
-                  <li class="active"><a href="/movies1">&laquo;</a></li>
-                  $for i in range(10):
-                    <li><a href="/movies$page">$page</a></li>
-                    $ page = (page+1)
-                  <li><a href="/movies$page">&raquo;</a></li>
-              </ul>
-            </nav>
-          </main>
 </body>
 
     <!-- Bootstrap core JavaScript

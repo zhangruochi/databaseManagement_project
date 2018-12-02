@@ -2,6 +2,9 @@ import csv
 import random
 from collections import defaultdict
 from random import choices
+import pandas as pd
+import pymysql
+
 
 def generate_director():
     director = {}
@@ -173,6 +176,44 @@ def generate_trans():
 
 
 
+def get_ratings():
+    conn = pymysql.connect(user='root',password='lv23623600', \
+    db='movie_infor',use_unicode=True)
+
+    sql = 'select * from rating'
+    df = pd.read_sql(sql, con=conn)
+    df.to_csv("rating.csv")
+    conn.close()
+
+
+def get_user():
+    conn = pymysql.connect(user='root',password='lv23623600', \
+    db='movie_infor',use_unicode=True)
+
+    sql = 'select * from user'
+    df = pd.read_sql(sql, con=conn)
+    print(df.head())
+    df.to_csv("user.csv")
+    conn.close()
+
+
+
+def get_movie():
+    conn = pymysql.connect(user='root',password='lv23623600', \
+    db='movie_infor',use_unicode=True)
+
+    sql = 'SELECT * FROM movies WHERE movie_id in (SELECT movie_id FROM rating)'
+    df = pd.read_sql(sql, con=conn)
+    print(df.head())
+    df.to_csv("movies.csv")
+    conn.close()
+
+
+
+
+## create movie relation
+def create_movie_relation():
+    pass
 
 
 
@@ -186,4 +227,7 @@ if __name__ == '__main__':
     #generate_user()
     #generator_theater()
     #generate_onshow()
-    generate_trans()
+    #generate_trans()
+    get_ratings()
+    #get_user()
+    #get_movie()

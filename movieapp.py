@@ -3,10 +3,12 @@ import pymysql
 from web import form
 from web.contrib.template import render_jinja
 import copy
+from neo4j import GraphDatabase
 
 
 web.config.debug = False
 pymysql.install_as_MySQLdb()
+driver = GraphDatabase.driver("bolt://localhost:7687", auth=("neo4j", "lv23623600"))
 
 
 urls = (
@@ -201,11 +203,14 @@ class Movies:
 
         raw_data = web.input()
         title = raw_data.get("key")
-
         actors = db.query('SELECT DISTINCT(a.name) FROM movies m JOIN rel_movie_actor r ON m.movie_id = r.movie_id JOIN actor a ON r.actor_id = a.id WHERE title = $title;',vars = {"title": title})
         directors = db.query('SELECT DISTINCT(d.name) FROM director d JOIN movies ON movies.director_id = d.id WHERE title = $title;',vars = {"title": title})
-        ratings = db.query('SELECT r.score,r.text FROM rating r JOIN movies m ON  m.movie_id = r.movie_id WHERE m.title = $title',vars = {"title": title})
+        ratings = db.query('SELECT r.score,r.text,r.user_id FROM rating r JOIN movies m ON  m.movie_id = r.movie_id WHERE m.title = $title',vars = {"title": title})
         movies = db.query('SELECT * FROM movies WHERE title = $title',vars = {"title":title})
+
+        if not movies:
+            movies = db.query('SELECT * FROM movies WHERE title LIKE \"%{}%\"'.format(title))
+
         if actors or directors or ratings or movies:
             return render.moviedetail(movies,actors,directors,ratings)
         else:
@@ -256,6 +261,10 @@ class MovieTag:
         directors = db.query('SELECT DISTINCT(d.name) FROM director d JOIN movies ON movies.director_id = d.id WHERE title = $title;',vars = {"title": title})
         ratings = db.query('SELECT r.score,r.text,r.user_id FROM rating r JOIN movies m ON  m.movie_id = r.movie_id WHERE m.title = $title',vars = {"title": title})
         movies = db.query('SELECT * FROM movies WHERE title = $title',vars = {"title":title})
+
+        if not movies:
+            movies = db.query('SELECT * FROM movies WHERE title LIKE \"%{}%\"'.format(title))
+
         if actors or directors or ratings or movies:
             return render.moviedetail(movies,actors,directors,ratings)
         else:
@@ -434,48 +443,35 @@ class Profile:
 
 
 class Statistic:
-    def GET(self,page = None):
-        
+    def GET(self):
         if not session.logged_in:
             return web.seeother("/register")
 
         if session.logged_in != 2:
             return web.seeother("/")
 
-        if not page:
-            page = 1
+        current_gross = db.query("SELECT m.title, sum(t.total_price) AS total FROM movies m JOIN on_show o ON m.movie_id = o.movie_id JOIN transaction_user_onshow t ON t.on_show_id = o.id GROUP BY m.movie_id ORDER BY total DESC LIMIT 10")
+        top_rated = db.query("SELECT m.title, AVG(r.score) AS a FROM movies m JOIN Rating r ON r.movie_id = m.movie_id GROUP BY m.movie_id ORDER BY  a DESC LIMIT 10")
 
-        NavNum = 20
-        results = db.query("SELECT COUNT(*) AS c FROM movies")
-        count = results[0].c
 
-        if count % NavNum==0:
-            pages = count // NavNum
-        else:
-            pages = count // (NavNum + 1)
+        def read(tx):
+            res = tx.run("MATCH P1 = ((user {id:'93'})-[r:rate]->(m:Movie)),P2 = ((m:Movie)-[:same_community]->(m2:Movie)) RETURN P2 LIMIT 3")
+            
+            ans = []
+            for record in res:
+                ans.append(record["P2"].start.id)
+            return ans
 
-        off = (int(page)-1) * NavNum
-        got_movies = db.select('movies',order='movie_id',limit = NavNum,offset = off)
+        with driver.session() as neo:
+            recommends_id = neo.write_transaction(read)
 
-        if got_movies:
-            return render.statistic(got_movies,int(page))
-        else:
-            return "Can not find any movie."
 
-    def POST(self,x):
+        recommends_movies = db.query("SELECT * FROM movies WHERE movie_id in ({},{},{})".format(*recommends_id))
 
-        raw_data = web.input()
-        title = raw_data.get("key")
+        return render.statistic(current_gross,top_rated,recommends_movies)
+                
 
-        actors = db.query('SELECT DISTINCT(a.name) FROM movies m JOIN rel_movie_actor r ON m.movie_id = r.movie_id JOIN actor a ON r.actor_id = a.id WHERE title = $title;',vars = {"title": title})
-        directors = db.query('SELECT DISTINCT(d.name) FROM director d JOIN movies ON movies.director_id = d.id WHERE title = $title;',vars = {"title": title})
-        ratings = db.query('SELECT r.score,r.text FROM rating r JOIN movies m ON  m.movie_id = r.movie_id WHERE m.title = $title',vars = {"title": title})
-        movies = db.query('SELECT * FROM movies WHERE title = $title',vars = {"title":title})
-        if actors or directors or ratings or movies:
-            return render.moviedetail(movies,actors,directors,ratings)
-        else:
-            return "no movies"
-
+   
 
 
 

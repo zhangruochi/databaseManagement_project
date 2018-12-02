@@ -22,21 +22,22 @@ $def with (flag)
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
           <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-              <a class="nav-link" href="/index">Home </a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/movies">Movies</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/onshow">Onshow</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/trans">Orders</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/profile">Profile</a>
-            </li>
+            $if context.logged_in and context.logged_in == 2:
+              <li class="nav-item">
+                <a class="nav-link" href="/index">Home </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/movies">Movies</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/onshow">Onshow</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/trans">Orders</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/profile">Profile</a>
+              </li>
             <li class="nav-item">
               <a class="nav-link disabled" href="/logout">Logout</a>
             </li>
