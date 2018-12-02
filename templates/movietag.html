@@ -158,8 +158,8 @@ $def with (movies)
               <tbody>
               $for movie in movies:
                 <tr>
-                  <th scope="row">$movie.movie_id</th>
-                    <td ><a href="moviedetail$movie.title" style="color: #FF1493"> $movie.title </a></td>
+                  <th scope="row"><a href="moviedetail$movie.movie_id" style="color: #FF1493">$movie.movie_id</a></th>
+                    <td > $movie.title /td>
                     <td >$movie.company</td>
                     <td >$movie.budget</td>
                     <td >$movie.genre</td>

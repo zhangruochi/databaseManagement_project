@@ -203,6 +203,7 @@ class Movies:
 
         raw_data = web.input()
         title = raw_data.get("key")
+        amb = False
         actors = db.query('SELECT DISTINCT(a.name) FROM movies m JOIN rel_movie_actor r ON m.movie_id = r.movie_id JOIN actor a ON r.actor_id = a.id WHERE title = $title;',vars = {"title": title})
         directors = db.query('SELECT DISTINCT(d.name) FROM director d JOIN movies ON movies.director_id = d.id WHERE title = $title;',vars = {"title": title})
         ratings = db.query('SELECT r.score,r.text,r.user_id FROM rating r JOIN movies m ON  m.movie_id = r.movie_id WHERE m.title = $title',vars = {"title": title})
@@ -210,9 +211,10 @@ class Movies:
 
         if not movies:
             movies = db.query('SELECT * FROM movies WHERE title LIKE \"%{}%\"'.format(title))
+            amb = True
 
         if actors or directors or ratings or movies:
-            return render.moviedetail(movies,actors,directors,ratings)
+            return render.moviedetail(movies,actors,directors,ratings,amb)
         else:
             return "no movies"
 
@@ -256,17 +258,20 @@ class MovieTag:
 
         raw_data = web.input()
         title = raw_data.get("key")
+        amb = False
 
         actors = db.query('SELECT DISTINCT(a.name) FROM movies m JOIN rel_movie_actor r ON m.movie_id = r.movie_id JOIN actor a ON r.actor_id = a.id WHERE title = $title;',vars = {"title": title})
         directors = db.query('SELECT DISTINCT(d.name) FROM director d JOIN movies ON movies.director_id = d.id WHERE title = $title;',vars = {"title": title})
         ratings = db.query('SELECT r.score,r.text,r.user_id FROM rating r JOIN movies m ON  m.movie_id = r.movie_id WHERE m.title = $title',vars = {"title": title})
         movies = db.query('SELECT * FROM movies WHERE title = $title',vars = {"title":title})
-
+       
         if not movies:
             movies = db.query('SELECT * FROM movies WHERE title LIKE \"%{}%\"'.format(title))
+            amb = True
+
 
         if actors or directors or ratings or movies:
-            return render.moviedetail(movies,actors,directors,ratings)
+            return render.moviedetail(movies,actors,directors,ratings,amb)
         else:
             return "no movies"
 
@@ -324,7 +329,7 @@ class User:
 
 
 class MovieDetail:
-    def GET(self,title):
+    def GET(self,id):
 
         if not session.logged_in:
             return web.seeother("/register")
@@ -333,13 +338,13 @@ class MovieDetail:
             return web.seeother("/")
 
         flag = False
-        actors = db.query('SELECT DISTINCT(a.name) FROM movies m JOIN rel_movie_actor r ON m.movie_id = r.movie_id JOIN actor a ON r.actor_id = a.id WHERE title = $title;',vars = {"title": title})
-        directors = db.query('SELECT DISTINCT(d.name) FROM director d JOIN movies ON movies.director_id = d.id WHERE title = $title;',vars = {"title": title})
-        ratings = db.query('SELECT r.score,r.text,r.user_id FROM rating r JOIN movies m ON  m.movie_id = r.movie_id WHERE m.title = $title',vars = {"title": title})
-        movie = db.query('SELECT * FROM movies WHERE title = $title',vars = {"title":title})
-        session.title = title
+        actors = db.query('SELECT DISTINCT(a.name) FROM movies m JOIN rel_movie_actor r ON m.movie_id = r.movie_id JOIN actor a ON r.actor_id = a.id WHERE m.movie_id = {}'.format(id))
+        directors = db.query('SELECT DISTINCT(d.name) FROM director d JOIN movies m ON m.director_id = d.id WHERE m.movie_id = {}'.format(id))
+        ratings = db.query('SELECT r.score,r.text,r.user_id FROM rating r JOIN movies m ON  m.movie_id = r.movie_id WHERE m.movie_id = {}'.format(id))
+        movies = db.query('SELECT * FROM movies WHERE movie_id = {}'.format(id)) 
+
         if actors or directors or ratings or movie:
-            return render.moviedetail(movie,actors,directors,ratings)
+            return render.moviedetail(movies,actors,directors,ratings,False)
         else:
             return "error"
 

@@ -1,4 +1,4 @@
-$def with (movies,actors,directors,ratings)
+$def with (movies,actors,directors,ratings,amb)
 <!doctype html>
 <html lang="en">
   <head>
@@ -82,33 +82,34 @@ $def with (movies,actors,directors,ratings)
                     Director: <stong>$director.name</stong></a>
           </div>
           <br><br><br>
-          <div class="list-group" >
-            $ flag = False
-            $if ratings:
-              <p class="list-group-item list-group-item-action">Rating list (Rating | Comment)</p>
-              $for rating in ratings:
-                $if rating.user_id == context.id:
-                  $ flag = True
-                <p class="list-group-item list-group-item-action list-group-item-warning">$rating.score | $rating.text</p>
-          </div>
-          $if flag:
-            <div class="alert">
-              <!-- <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>  -->
-              <p style="color: white">You have Rated this movie</p>
+          
+            <div class="list-group" >
+              $ flag = False
+              $if ratings:
+                <p class="list-group-item list-group-item-action">Rating list (Rating | Comment)</p>
+                $for rating in ratings:
+                  $if rating.user_id == context.id:
+                    $ flag = True
+                  <p class="list-group-item list-group-item-action list-group-item-warning">$rating.score | $rating.text</p>
             </div>
+            $if flag:
+              <div class="alert">
+                <!-- <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>  -->
+                <p style="color: white">You have Rated this movie</p>
+              </div>
 
-          $else:
-            <br><br><br>
-            <p class="list-group-item list-group-item-action">Rate this movie now !</p>
-            <form class="form-signin" method="POST">
-              <label for="score" class="sr-only">Score</label>
-              <input type="text" name="score" class="form-control" placeholder="You can rate here: (rate from 1 to 5 )" required>
+            $elif not amb:
+                <br><br><br>
+                <p class="list-group-item list-group-item-action">Rate this movie now !</p>
+                <form class="form-signin" method="POST">
+                  <label for="score" class="sr-only">Score</label>
+                  <input type="text" name="score" class="form-control" placeholder="You can rate here: (rate from 1 to 5 )" required>
 
-              <label for="comment" class="sr-only">Comment</label>
-              <input type="text" name="comment" class="form-control" placeholder="You can comment here: (such as: Excellent !)" required>
+                  <label for="comment" class="sr-only">Comment</label>
+                  <input type="text" name="comment" class="form-control" placeholder="You can comment here: (such as: Excellent !)" required>
 
-              <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
-            </form>
+                  <button class="btn btn-lg btn-primary btn-block" type="submit">Submit</button>
+                </form>
 
       </div>
       
