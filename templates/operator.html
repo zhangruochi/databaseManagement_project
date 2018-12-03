@@ -39,25 +39,19 @@ $def with(theaters)
     <main>
     <div>
     <br><br><br>
-      <table>
+      <h3><strong>Theaters list</strong></h3>
+      <tables style="width:800px;background-color:black;">
         <tr>
-          <td>Theaters</td>
-
           <td>
-            <a role="button"  class="btn btn-outline-danger">ALL</a>
+            <a role="button" href="/managementALL" >ALL</a>
           </td>
           $for theater in theaters:
             <td>
-              <a role="button" href="/management$theater.name"  class="btn btn-outline-secondary">$theater.name</a>
+              <a role="button" href="/management$theater.name"  class="btn btn-outline-info">$theater.name</a>
             </td>
         </tr>
       </table>
     </div> 
-      <!-- FOOTER -->
-      <footer class="container">
-        <p class="float-right"><a href="#">Back to top</a></p>
-        <p>&copy; 2017-2018 Company, Inc. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
-      </footer>
   </main>
 
 

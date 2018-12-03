@@ -45,7 +45,6 @@ session = web.session.Session(app, web.session.DiskStore('sessions'),initializer
 render = web.template.render('templates/',globals={'context':session})
 
 
-
 class Index:
     def GET(self):
         return render.index()
@@ -93,8 +92,26 @@ class Login:
 
 class Management:
     def GET(self,name):
-        movies = db.query("SELECT m.title,o.time_schedule,o.seat_limit, o.id,o.price,t.name,t.district,t.operator FROM movies m JOIN on_show o ON m.movie_id = o.movie_id JOIN theater t ON t.id = o.thea_id WHERE t.operator = $operator and t.name = $name ORDER BY m.movie_id, o.time_schedule",vars = {"operator":session.id, "name":name})
+        if name == "ALL":
+            movies = db.query("SELECT m.title,o.time_schedule,o.seat_limit, o.id,o.price,t.name,t.district,t.operator FROM movies m JOIN on_show o ON m.movie_id = o.movie_id JOIN theater t ON t.id = o.thea_id WHERE t.operator = $operator ORDER BY m.movie_id DESC, o.time_schedule DESC",vars = {"operator":session.id})
+        else:
+            movies = db.query("SELECT m.title,o.time_schedule,o.seat_limit, o.id,o.price,t.name,t.district,t.operator FROM movies m JOIN on_show o ON m.movie_id = o.movie_id JOIN theater t ON t.id = o.thea_id WHERE t.operator = $operator and t.name = $name ORDER BY m.movie_id DESC, o.time_schedule DESC",vars = {"operator":session.id, "name":name})
         return render.management(movies)
+
+    def POST(self,x):
+        raw_data = web.input()
+        movie_id = raw_data.get('movie_id')
+        time_schedule = raw_data.get('time_schedule')
+        seat_limit = raw_data.get('seat_limit')
+        price = raw_data.get('price')
+        thea_id = raw_data.get('thea_id')
+
+        check = db.query('INSERT INTO on_show (movie_id, time_schedule, seat_limit, price, thea_id) values ({},\"{}\",{},{},{})'.format(movie_id,time_schedule,seat_limit,price,thea_id))
+
+        if check:
+            return render.result(True)
+        else:
+            return render.result(False)
 
 
 
@@ -130,7 +147,8 @@ class Register:
             if res:
                 return render.index()
             else:
-                return "error"
+                return render.result(False)
+
 
 
 
@@ -144,11 +162,11 @@ class Result:
 class Onshow:
     def GET(self):
     
-        res = db.query('SELECT m.title,o.time_schedule,o.seat_limit, o.id,o.price,t.name,t.district FROM movies m JOIN on_show o ON m.movie_id = o.movie_id JOIN theater t ON t.id = o.thea_id ORDER BY m.movie_id, o.time_schedule')
+        res = db.query('SELECT m.movie_id,m.title,o.time_schedule,o.seat_limit, o.id,o.price,t.name,t.district FROM movies m JOIN on_show o ON m.movie_id = o.movie_id JOIN theater t ON t.id = o.thea_id ORDER BY m.movie_id, o.time_schedule')
         if res:
             return render.onshow(res)
         else:
-            return "can not find any on show movie"
+            return render.result(False)
     
     def POST(self):
         raw_data = web.input()
@@ -157,16 +175,16 @@ class Onshow:
         district = raw_data.get("district",None)
 
         if title:
-            res = db.query("SELECT m.title,o.time_schedule,o.seat_limit, o.id,o.price,t.name,t.district FROM movies m JOIN on_show o ON m.movie_id = o.movie_id JOIN theater t ON t.id = o.thea_id WHERE m.title = $title ORDER BY m.movie_id, o.time_schedule",vars = {"title":title})
+            res = db.query("SELECT m.title,o.time_schedule,o.seat_limit, o.id,o.price,t.name,t.district,m.movie_id FROM movies m JOIN on_show o ON m.movie_id = o.movie_id JOIN theater t ON t.id = o.thea_id WHERE m.title = $title ORDER BY m.movie_id, o.time_schedule",vars = {"title":title})
         elif theater:
-            res = db.query("SELECT m.title,o.time_schedule,o.seat_limit, o.id,o.price,t.name,t.district FROM movies m JOIN on_show o ON m.movie_id = o.movie_id JOIN theater t ON t.id = o.thea_id WHERE t.name = $theater ORDER BY m.movie_id, o.time_schedule",vars = {"theater":theater})
+            res = db.query("SELECT m.title,o.time_schedule,o.seat_limit, o.id,o.price,t.name,t.district,m.movie_id FROM movies m JOIN on_show o ON m.movie_id = o.movie_id JOIN theater t ON t.id = o.thea_id WHERE t.name = $theater ORDER BY m.movie_id, o.time_schedule",vars = {"theater":theater})
         elif district:
-            res = db.query("SELECT m.title,o.time_schedule,o.seat_limit, o.id,o.price,t.name,t.district FROM movies m JOIN on_show o ON m.movie_id = o.movie_id JOIN theater t ON t.id = o.thea_id WHERE t.district = $district ORDER BY m.movie_id, o.time_schedule",vars = {"district": district})
+            res = db.query("SELECT m.title,o.time_schedule,o.seat_limit, o.id,o.price,t.name,t.district,m.movie_id FROM movies m JOIN on_show o ON m.movie_id = o.movie_id JOIN theater t ON t.id = o.thea_id WHERE t.district = $district ORDER BY m.movie_id, o.time_schedule",vars = {"district": district})
 
         if res:
             return render.onshow(res)
         else:
-            return "can not find"
+            return render.result(False)
 
 
 
@@ -197,7 +215,7 @@ class Movies:
         if got_movies:
             return render.movies(got_movies,int(page))
         else:
-            return "Can not find any movie."
+            return render.result(False)
 
     def POST(self,x):
 
@@ -218,7 +236,7 @@ class Movies:
         if actors or directors or ratings or movies:
             return render.moviedetail(movies,actors,directors,ratings,amb)
         else:
-            return "no movies"
+            return render.result(False)
 
 
 
@@ -254,7 +272,7 @@ class MovieTag:
         if got_movies:
             return render.movietag(got_movies)
         else:
-            return "Can not find any movie."
+            return render.result(False)
 
     def POST(self,x):
 
@@ -275,31 +293,32 @@ class MovieTag:
         if actors or directors or ratings or movies:
             return render.moviedetail(movies,actors,directors,ratings,amb)
         else:
-            return "no movies"
+            return render.result(False)
 
 
 class Actor:
-    def GET(self,name):
+    def GET(self,id):
         if not session.logged_in:
             return web.seeother("/register")
 
         if session.logged_in != 2:
             return web.seeother("/")
 
-        res = db.query('SELECT * from actor WHERE name = $name',vars = {"name":name})[0]
+        res = db.query('SELECT * from actor WHERE id = {}'.format(id))[0]
+        
         if res:
             return render.actor(res)
         else:
-            return "error"
+            return render.result(False)
 
 
 class Director:
-    def GET(self,name):
-        res = db.query('SELECT * from director WHERE name = $name',vars = {"name":name})[0]
+    def GET(self,id):
+        res = db.query('SELECT * from director WHERE id = {}'.format(id))[0]
         if res:
             return render.director(res)
         else:
-            return "error"
+            return render.result(False)
 
 
 
@@ -327,7 +346,7 @@ class User:
         if res:
             return render.actor(res)
         else:
-            return "Can not find"
+            render.result(False)
 
 
 class MovieDetail:
@@ -340,15 +359,15 @@ class MovieDetail:
             return web.seeother("/")
 
         flag = False
-        actors = db.query('SELECT DISTINCT(a.name) FROM movies m JOIN rel_movie_actor r ON m.movie_id = r.movie_id JOIN actor a ON r.actor_id = a.id WHERE m.movie_id = {}'.format(id))
-        directors = db.query('SELECT DISTINCT(d.name) FROM director d JOIN movies m ON m.director_id = d.id WHERE m.movie_id = {}'.format(id))
+        actors = db.query('SELECT DISTINCT(a.name),a.id FROM movies m JOIN rel_movie_actor r ON m.movie_id = r.movie_id JOIN actor a ON r.actor_id = a.id WHERE m.movie_id = {}'.format(id))
+        directors = db.query('SELECT DISTINCT(d.name),d.id FROM director d JOIN movies m ON m.director_id = d.id WHERE m.movie_id = {}'.format(id))
         ratings = db.query('SELECT r.score,r.text,r.user_id FROM rating r JOIN movies m ON  m.movie_id = r.movie_id WHERE m.movie_id = {}'.format(id))
         movies = db.query('SELECT * FROM movies WHERE movie_id = {}'.format(id)) 
 
         if actors or directors or ratings or movie:
             return render.moviedetail(movies,actors,directors,ratings,False)
         else:
-            return "error"
+            return render.result(False)
 
     def POST(self,x):
     

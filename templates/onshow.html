@@ -28,16 +28,19 @@ $def with (movies)
         <div class="collapse navbar-collapse" id="navbarCollapse">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-              <a class="nav-link" href="/index">Home </a>
+              <a class="nav-link" href="/index">Home</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/movies">Movies</a>
+              <a class="nav-link" href="/movies">Movies </a>
             </li>
             <li class="nav-item active">
               <a class="nav-link" href="/onshow">Onshow<span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="/trans">Orders</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/statistic">Statistic</a> 
             </li>
             <li class="nav-item">
               <a class="nav-link" href="/profile">Profile</a>
@@ -80,25 +83,25 @@ $def with (movies)
             <table class="table table-bordered">
                <thead>
                   <tr style="font-weight:bold">
-                    <th scope="row">title</th>
-                    <td scope="col">schedule</td>
-                    <td scope="col">seat</td>
-                    <td scope="col">price</td>
-                    <td scope="col">theater</td>
-                    <td scope="col">district</td>
-                    <td scope="col">purchase</td>
+                    <th scope="row">TITLE</th>
+                    <td scope="col">THEATER</td>
+                    <td scope="col">DISTRICT</td>
+                    <td scope="col">SCHEDULE</td>
+                    <td scope="col">PRICE</td>
+                    <td scope="col">SEAT</td>
+                    <td scope="col">PURCHASE</td>
 
                   </tr>
                 </thead>
               <tbody>
               $for movie in movies:
                 <tr>
-                    <th ><a href="moviedetail$movie.title" style="color: #FF1493"> $movie.title </a></th>
-                    <td >$movie.time_schedule</td>
-                    <td >$movie.seat_limit</td>
-                    <td >$movie.price</td>
+                    <th ><a href="moviedetail$movie.movie_id" style="color: #FF1493"> $movie.title </a></th>
                     <td >$movie.name</td>
                     <td >$movie.district</td>
+                    <td >$movie.time_schedule</td>
+                    <td >$movie.price</td>
+                    <td >$movie.seat_limit</td>
                     $if movie.seat_limit:
                       <td>
                       <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -116,6 +119,9 @@ $def with (movies)
                 </tr>
               </tbody>
             </table>
+            <footer class="container">
+              <p class="float-right"><a href="#">Back to top</a></p>
+            </footer>
           </main>
 </body>
 

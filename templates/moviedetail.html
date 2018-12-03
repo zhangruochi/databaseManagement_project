@@ -15,9 +15,6 @@ $def with (movies,actors,directors,ratings,amb)
 
     <!-- Custom styles for this template -->
     <link href="./static/css/cover.css" rel="stylesheet">
-
-
-
   </head>
 <body>
   <header>
@@ -29,16 +26,19 @@ $def with (movies,actors,directors,ratings,amb)
         <div class="collapse navbar-collapse" id="navbarCollapse">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-              <a class="nav-link" href="/index">Home </a>
+              <a class="nav-link" href="/index">Home</a>
             </li>
             <li class="nav-item active">
-              <a class="nav-link" href="/movies">Movies<span class="sr-only">(current)</span></a>
+              <a class="nav-link" href="/movies">Movies <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="/onshow">Onshow</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="/trans">Orders</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/statistic">Statistic</a> 
             </li>
             <li class="nav-item">
               <a class="nav-link" href="/profile">Profile</a>
@@ -69,16 +69,18 @@ $def with (movies,actors,directors,ratings,amb)
           <div class="list-group" >
             $if actors:
               <p class="list-group-item list-group-item-action">Actor list (click on the actor below to explore details)</p>
+              $ index = 1
               $for actor in actors:
-                  <a href="/actor$actor.name" class="list-group-item list-group-item-action list-group-item-danger">
-                    Actor: <stong>$actor.name</stong></a>
+                  <a href="/actor$actor.id" class="list-group-item list-group-item-action list-group-item-danger">
+                    Actor$index: <stong>$actor.name</stong></a>
+                  $ index= index+1
           </div>
           <br><br><br>
           <div class="list-group" >
             $if directors:
               <p class="list-group-item list-group-item-action">Director list (click on the director below to explore details)</p>
               $for director in directors:
-                  <a href="/director$director.name" class="list-group-item list-group-item-action list-group-item-info">
+                  <a href="/director$director.id" class="list-group-item list-group-item-action list-group-item-info">
                     Director: <stong>$director.name</stong></a>
           </div>
           <br><br><br>
@@ -103,7 +105,7 @@ $def with (movies,actors,directors,ratings,amb)
                 <p class="list-group-item list-group-item-action">Rate this movie now !</p>
                 <form class="form-signin" method="POST">
                   <label for="score" class="sr-only">Score</label>
-                  <input type="text" name="score" class="form-control" placeholder="You can rate here: (rate from 1 to 5 )" required>
+                  <input type="number" name="score" class="form-control" placeholder="You can rate here: (rate from 0 to 10 )" required>
 
                   <label for="comment" class="sr-only">Comment</label>
                   <input type="text" name="comment" class="form-control" placeholder="You can comment here: (such as: Excellent !)" required>

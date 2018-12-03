@@ -17,6 +17,28 @@ $def with(movies)
     <link href="./static/css/cover.css" rel="stylesheet">
     <link href="./static/images/icon.png" rel="stylesheet">
 
+    <style>
+      .alert {
+          padding: 20px;
+          background-color: #f44336;
+          color: white;
+      }
+
+      .closebtn {
+          margin-left: 15px;
+          color: white;
+          font-weight: bold;
+          float: right;
+          font-size: 22px;
+          line-height: 20px;
+          cursor: pointer;
+          transition: 0.3s;
+      }
+
+      .closebtn:hover {
+          color: black;
+      }
+      </style>
 
   </head>
   <body>
@@ -36,9 +58,41 @@ $def with(movies)
         </div>
       </nav>
     </header>
-    <main>
+
+    <main role="main" class="inner cover">
     <div>
     <br><br><br>
+        <form class="form-signin" method="POST">
+        
+            <!-- <div class="alert">
+              <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+              Please Login Again.
+            </div> -->
+
+        <h1 class="h3 mb-3 font-weight-normal" style="color:white">Add on show movies</h1>
+
+        <label for="movie_id" class="sr-only" >Movie ID</label>
+        <input type="text" name="movie_id" class="form-control" placeholder="Movie ID" required>
+        
+        <label for="time_schedule" class="sr-only">Time Schedule</label>
+        <input type="text" name="time_schedule" class="form-control" placeholder="Time Schedule:2018-12-02 12:00:00" required>
+
+        <label for="seat_limit" class="sr-only">Seat Limit</label>
+        <input type="text" name="seat_limit" class="form-control" placeholder="Seat Limit" required>
+
+        <label for="price" class="sr-only">Price</label>
+        <input type="text" name="price" class="form-control" placeholder="Price" required>
+
+        <label for="thea_id" class="sr-only">Theater ID</label>
+        <input type="text" name="thea_id" class="form-control" placeholder="Theater ID" required>
+
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Add</button>
+      </form>
+
+      <br><br>
+
+      <h1 class="h3 mb-3 font-weight-normal" style="color:white">Manage on show movies</h1>
+
       <table class="table table-bordered">
          <thead>
             <tr style="font-weight:bold">
@@ -49,20 +103,18 @@ $def with(movies)
               <td scope="col">theater</td>
               <td scope="col">district</td>
               <td scope="col">operation</td>
-
             </tr>
           </thead>
               <tbody>
               $for movie in movies:
                 <tr>
-                    <th ><a href="moviedetail$movie.title" style="color: #FF1493"> $movie.title </a></th>
+                    <th ><a style="color: #FF1493"> $movie.title </a></th>
                     <td >$movie.time_schedule</td>
                     <td >$movie.seat_limit</td>
                     <td >$movie.price</td>
                     <td >$movie.name</td>
                     <td >$movie.district</td>
-                    <td ><a href="/delete$movie.id">delete</a><td>
-
+                    <td ><a href="/delete$movie.id">delete</a></td>
                 </tr>
               </tbody>
             </table>
