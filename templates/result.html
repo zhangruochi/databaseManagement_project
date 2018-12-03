@@ -20,34 +20,35 @@ $def with (flag)
 
     <header>
       <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-        <a class="navbar-brand" href="#">Hello, $context.user</a>
+        $if context.user:
+          <a class="navbar-brand" href="#">Hello, $context.user</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
           <ul class="navbar-nav mr-auto">
-            $if context.logged_in and context.logged_in == 2:
               <li class="nav-item">
                 <a class="nav-link" href="/index">Home</a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/movies">Movies</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/onshow">Onshow</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/trans">Orders</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/statistic">Statistic</a> 
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/profile">Profile</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link disabled" href="/logout">Logout</a>
-              </li>
+              $if context.logged_in and context.logged_in == 2:
+                <li class="nav-item">
+                  <a class="nav-link" href="/movies">Movies</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/onshow">Onshow</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/trans">Orders</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/statistic">Statistic</a> 
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="/profile">Profile</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link disabled" href="/logout">Logout</a>
+                </li>
           </ul>
         </div>
       </nav>
