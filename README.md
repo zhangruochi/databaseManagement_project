@@ -20,10 +20,10 @@ We purpose to develop a movie database which can provide fundamental information
 
 
 ### Database Schema
-![](4.png)
+![](screenshots/4.png)
 
 
 ### System Screenshot
-![](1.png)
-![](2.png)
-![](3.png)
+![](screenshots/1.png)
+![](screenshots/2.png)
+![](screenshots/3.png)
