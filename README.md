@@ -17,3 +17,13 @@ We purpose to develop a movie database which can provide fundamental information
 3. The users can sign up and login to the system to purchase tickets.
 4. We will design different authority to different user accounts, for example, management account is used to handle the modification and the statistic work in the database. And customer account is used to purchase tickets, etc.
 5. We will use the methods of data mining to recommend movies to users by analyzing their preferences based on their purchasing history.
+
+
+### Database Schema
+![](4.png)
+
+
+### System Screenshot
+![](1.png)
+![](2.png)
+![](3.png)
