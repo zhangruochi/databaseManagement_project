@@ -3,7 +3,8 @@
 Team member: 
 - Ruochi Zhang(email: RUZ41@pitt.edu), 
 - Zhehao Guo(email: zhg26@pitt.edu), 
-- Jun Jiang(email: juj19@pitt.edu)
+- Jun Jiang(email: juj19@pitt.edu),
+- Qi Lu(email: qil66@pitt.edu)
 - Develop tools and environment: python + MySQL + Neo4j
 
 ### Short description: 
